@@ -12,7 +12,7 @@ install_vimplug() {
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     echo "Now please open vim and print :PlugInstall to finish installation"
-    echo "Some errors should be displayed during first vim opening, it's ok"
+    echo "Note. Some errors should be displayed during first vim opening, it's ok! Just ignore them and press Enter, as vim suggests, then run command above"
 }
 
 parse_options $@
