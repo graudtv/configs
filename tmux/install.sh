@@ -1,8 +1,8 @@
 target="tmux"
-config_src=$(dirname "$0")/"tmux"
-config_dst="${HOME}/.tmux"
+config_src=$(dirname "$0")/"tmux.conf"
+config_dst="${HOME}/.tmux.conf"
 
 source impl/install-target.sh
 
-parse-options $@
-install-target
+parse_options $@
+install_target

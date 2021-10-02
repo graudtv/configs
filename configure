@@ -12,17 +12,17 @@ usage() {
 }
 
 # $1 - directory name
-is-valid-component() {
+is_valid_component() {
 	[ -f "$1/install.sh" ]
 	return
 }
 
-list-components() {
+list_components() {
 	echo "Configurations for the following components can be installed:"
 	# ls -d */ | cut -f1 -d'/' | awk '{ printf("%d")\n", ++i, $1) }'
 	i=1
 	ls -1d */ | while read component; do # iterating over directories. while is used to handle directories containing spaces
-		if is-valid-component $component; then
+		if is_valid_component $component; then
 			echo "$i) ${component%/}"
 			i=$(expr $i + 1)
 		fi
@@ -41,13 +41,13 @@ case $1 in
 	exit
 	;;
 "-l" | "--ls" | "--list")
-	list-components
+	list_components
 	exit
 	;;
 esac
 
 # running installation script for particular component
-if is-valid-component "$1"; then
+if is_valid_component "$1"; then
 	script="$1/install.sh"
 	shift
 	bash $script $@

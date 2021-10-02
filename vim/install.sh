@@ -4,7 +4,7 @@ config_dst="${HOME}/.vimrc"
 
 source impl/install-target.sh
 
-install-vimplug() {
+install_vimplug() {
 	[ -e "${HOME}/.vim/autoload/plug.vim" ] && return
 
 	# installing https://github.com/junegunn/vim-plug according to instruction
@@ -15,6 +15,6 @@ install-vimplug() {
     echo "Some errors should be displayed during first vim opening, it's ok"
 }
 
-parse-options $@
-install-target
-install-vimplug
+parse_options $@
+install_target
+install_vimplug
