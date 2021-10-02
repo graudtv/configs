@@ -32,8 +32,8 @@ install_target() {
 usage() {
 	echo "This script automatically installs some keybindings and plugins for $target"
 	echo "Options: "
-	echo "  --opt_force                 # override existing $target config"
-	echo "  --opt_symlink               # install config as opt_symlink to file in this repo"
+	echo "  --force                 # override existing $target config"
+	echo "  --symlink               # install config as opt_symlink to file in this repo"
 	echo "  --help "
 }
 
