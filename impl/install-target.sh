@@ -25,7 +25,9 @@ install_target() {
 	if [ -z $opt_symlink ]; then # install by copy
 		install -v "$config_src" "$config_dst"
 	else
-		ln -sv "$config_src" "$config_dst"
+		# $PWD used as a workaround for realpath or readlink -f,
+		# because the latter are not available on Mac OS by default
+		ln -sv "$PWD/$config_src" "$config_dst"
 	fi
 }
 
