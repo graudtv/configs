@@ -19,6 +19,7 @@ Plug 'jiangmiao/auto-pairs'
 " Plug 'easymotion/vim-easymotion'
 " https://github.com/ervandew/supertab
 Plug 'vim-scripts/AutoComplPop'
+Plug 'zhou13/vim-easyescape'
 call plug#end()
 
 " Tab completion
@@ -42,3 +43,8 @@ map <S-J> <C-d>
 map <S-K> <C-u>
 map <C-j> <C-y>
 map <C-k> <C-e>
+
+" quick escaping from insert mode
+let g:easyescape_chars = { "f": 1, "j": 1 }
+let g:easyescape_timeout = 2000
+cnoremap fj <ESC>
