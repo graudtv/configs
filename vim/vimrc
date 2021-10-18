@@ -1,50 +1,106 @@
-syntax on
-set number
-set tabstop=4
-set shiftwidth=4
-set hlsearch
-set incsearch
-set rnu " relative line numbers
+"--------------- General settings ---------------"
+set number              " line numbers
+set rnu                 " relative line numbers. rnu + numbers -> also shows
+                        " abs index of current line
+set hlsearch            " highlight search results
+set incsearch	          " incrimental search - show search result without pressing Enter
+set cursorline          " highlight the current line
+set colorcolumn=80      " ruler
+au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comments insertion
 
 "autocompletion settings 
-set complete+=kspell
-set shortmess+=c
+"set complete+=kspell
+"set shortmess+=c	 " don't give ins-completion-menu messages
 
-" vim-plug plugins
+function! IndentWithTabs()
+  set tabstop=4     " Size of a hard tabstop (ts).
+  set shiftwidth=4  " Size of an indentation (sw).
+  set noexpandtab   " Always uses tabs instead of space characters (noet).
+  set autoindent    " Copy indent from current line when starting a new line (ai).
+endfunction
+
+function! IndentWithSpaces()
+  set tabstop=2     " Size of a hard tabstop (ts).
+  set shiftwidth=2  " Size of an indentation (sw).
+  set expandtab     " Always uses spaces instead of tab characters (et).
+  set softtabstop=0 " Number of spaces a <Tab> counts for. When 0, featuer is off (sts).
+  set autoindent    " Copy indent from current line when starting a new line.
+  set smarttab      " Inserts blanks on a <Tab> key (as per sw, ts and sts).
+endfunction
+call IndentWithSpaces()
+
+"--------------- pre-config for vim-plug plugins  ---------------"
+" enable normal expansion of brackets and parentheses
+let delimitMate_expand_cr = 1
+let delimitMate_expand_space = 1
+
+"--------------- vim-plug plugins ---------------"
 call plug#begin('~/.vim/plugged')
-Plug 'junegunn/vim-easy-align'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+" gruvbox -- color schemes
 Plug 'morhetz/gruvbox'
-Plug 'jiangmiao/auto-pairs'
-" Plug 'easymotion/vim-easymotion'
-" https://github.com/ervandew/supertab
-Plug 'vim-scripts/AutoComplPop'
-Plug 'zhou13/vim-easyescape'
+
+" nerdtree -- viewing file tree inside vim
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+
+" easymotion -- quickly moving inside text
+Plug 'easymotion/vim-easymotion'
+
+" AutoComplPop -- automatically opens popup menu for completions
+"                 in insert mode
+Plug 'vim-scripts/AutoComplPop' 
+
+" easyescape -- helps to get rid of undesired visual effects when
+"               using 'fd'/'fj' or similar sequence to escape insert mode
+Plug 'zhou13/vim-easyescape'    " escaping insert mode with 'fj' sequence
+
+Plug 'https://github.com/Raimondi/delimitMate'
+"Plug 'junegunn/vim-easy-align'
+"Plug 'jiangmiao/auto-pairs'
+"Plug https://github.com/ervandew/supertab
 call plug#end()
+
+
+"--------------- plugins configuration ---------------"
+"----- gruvbox -----"
+colorscheme gruvbox
+set background=dark
+
+"----- nerdtree -----"
+map <C-n> :NERDTreeToggle<CR>
+
+"----- easymotion -----"
+map <Leader> <Plug>(easymotion-prefix)
+map f \f
+map F \F
+map t \t
+map T \T
+map gj \j
+map gk \k
+map gw \w
+map gW \W
+map gb \b
+map gB \B
+map ge \e
+map gE \E
+
+"----- easyescape -----"
+let g:easyescape_chars = { "f": 1, "j": 1 }
+let g:easyescape_timeout = 2000
+cnoremap fj <ESC>
+
 
 " Tab completion
 " will insert tab at beginning of line,
 " will use completion if not at beginning
-function! InsertTabWrapper()
-	return pumvisible() ? "\<C-y>" : "\<Tab>"
-endfunction
-inoremap <silent> <Tab> <c-r>=InsertTabWrapper()<cr>
+" function! InsertTabWrapper()
+"	return pumvisible() ? "\<C-y>" : "\<Tab>"
+"endfunction
+"inoremap <silent> <Tab> <c-r>=InsertTabWrapper()<cr>
 
-colorscheme gruvbox
-set background=dark
 
-" let g:mapleader=';'
-
-map <C-n> :NERDTreeToggle<CR>
-map <Leader> <Plug>(easymotion-prefix)
-
+"--------------- raw custom bindings ---------------"
 map <Space> <C-d>
 map <S-J> <C-d>
 map <S-K> <C-u>
 map <C-j> <C-y>
 map <C-k> <C-e>
-
-" quick escaping from insert mode
-let g:easyescape_chars = { "f": 1, "j": 1 }
-let g:easyescape_timeout = 2000
-cnoremap fj <ESC>
