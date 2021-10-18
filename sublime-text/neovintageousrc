@@ -1,1 +1,15 @@
-/Users/macuser/Library/ApplicationSupport/Sublime Text 3/Packages/User/.neovintageousrc
+" Type :help nv for help.
+
+let mapleader=;
+
+" screen scrolling
+noremap <Space> <C-d>
+noremap J <C-d>
+noremap K <C-u>
+noremap <C-j> <C-y>
+noremap <C-k> <C-e>
+
+" easy-motion like moving bindings
+noremap gl :AceJumpLine<CR>
+noremap gw :AceJumpWithinLine<CR>
+noremap s :AceJumpChar<CR>

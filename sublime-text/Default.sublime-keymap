@@ -1,1 +1,26 @@
-/Users/macuser/Library/ApplicationSupport/Sublime Text 3/Packages/User/Default.sublime-keymap
+[
+  {
+    "keys": ["f", "j"],
+    "command": "nv_enter_normal_mode",
+    "args": {"mode": "mode_insert"},
+    "context": [
+      {"key": "vi_insert_mode_aware"}
+    ]
+  },
+
+  //----- clang-format bindings -----//
+  {
+    "keys": ["super+shift+f"], "command": "clang_format",
+    "context": [
+        {"key": "selector", "operator": "equal", "operand": "source.c"}
+    ],
+  },
+
+  {
+    "keys": ["super+shift+f"], "command": "clang_format",
+    "context": [
+        {"key": "selector", "operator": "equal", "operand": "source.c++"}
+    ]
+  },
+  //----- end of clang-format bindings -----//
+]

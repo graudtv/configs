@@ -1,1 +1,17 @@
-/Users/macuser/Library/ApplicationSupport/Sublime Text 3/Packages/User/Preferences.sublime-settings
+{
+	"tab_size": 2,
+	"translate_tabs_to_spaces": true,
+
+	"font_size": 24,
+	"ignored_packages":
+	[
+		"Six",
+		"Vintage",
+		"Vintageous",
+	],
+	"relative_line_numbers": true,
+
+	"neovintageous_build_version": 11100,
+	"vintageous_use_ctrl_keys": true,
+	"vintageous_reset_mode_when_switching_tabs": false,
+}

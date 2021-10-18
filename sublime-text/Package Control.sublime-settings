@@ -1,1 +1,20 @@
-/Users/macuser/Library/ApplicationSupport/Sublime Text 3/Packages/User/Package Control.sublime-settings
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"AceJump",
+		"Anaconda",
+		"Clang Format",
+		"CMake",
+		"NeoVintageous",
+		"Package Control",
+		"Python 3",
+	],
+	"repositories":
+	[
+		"https://github.com/NeoVintageous/NeoVintageous"
+	],
+}
