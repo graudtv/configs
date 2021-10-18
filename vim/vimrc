@@ -100,7 +100,7 @@ cnoremap fj <ESC>
 
 "--------------- raw custom bindings ---------------"
 map <Space> <C-d>
-map <S-J> <C-d>
-map <S-K> <C-u>
+map J <C-d>
+map K <C-u>
 map <C-j> <C-y>
 map <C-k> <C-e>
