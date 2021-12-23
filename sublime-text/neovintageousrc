@@ -6,8 +6,8 @@ let mapleader=;
 noremap <Space> <C-d>
 noremap J <C-d>
 noremap K <C-u>
-noremap <C-j> <C-y>
-noremap <C-k> <C-e>
+noremap <C-j> <C-e>
+noremap <C-k> <C-y>
 
 " easy-motion like moving bindings
 noremap gl :AceJumpLine<CR>

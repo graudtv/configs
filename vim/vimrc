@@ -70,18 +70,9 @@ map <C-n> :NERDTreeToggle<CR>
 
 "----- easymotion -----"
 map <Leader> <Plug>(easymotion-prefix)
-map f \f
-map F \F
-map t \t
-map T \T
-map gj \j
-map gk \k
-map gw \w
-map gW \W
-map gb \b
-map gB \B
-map ge \e
-map gE \E
+map s <Plug>(easymotion-s)
+map gl <Plug>(easymotion-bd-jk)
+map gw <Plug>(easymotion-bd-wl)
 
 "----- easyescape -----"
 let g:easyescape_chars = { "f": 1, "j": 1 }
@@ -102,5 +93,5 @@ cnoremap fj <ESC>
 map <Space> <C-d>
 map J <C-d>
 map K <C-u>
-map <C-j> <C-y>
-map <C-k> <C-e>
+map <C-j> <C-e>
+map <C-k> <C-y>
