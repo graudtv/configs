@@ -1,11 +1,12 @@
 "--------------- General settings ---------------"
-set number              " line numbers
-set rnu                 " relative line numbers. rnu + numbers -> also shows
-                        " abs index of current line
-set hlsearch            " highlight search results
-set incsearch	          " incrimental search - show search result without pressing Enter
-set cursorline          " highlight the current line
-set colorcolumn=80      " ruler
+set number                     " line numbers
+set rnu                        " relative line numbers. rnu + numbers ->
+                               " also shows abs index of current line
+set hlsearch                   " highlight search results
+set incsearch	                 " incrimental search - show search result without pressing Enter
+set cursorline                 " highlight the current line
+set colorcolumn=80             " ruler
+set ignorecase smartcase       " more convenient search
 au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comments insertion
 
 "autocompletion settings 
