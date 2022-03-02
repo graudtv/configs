@@ -13,3 +13,6 @@ noremap <C-k> <C-y>
 noremap gl :AceJumpLine<CR>
 noremap gw :AceJumpWithinLine<CR>
 noremap s :AceJumpChar<CR>
+
+set ignorecase
+set smartcase
