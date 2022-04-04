@@ -2,17 +2,23 @@
 
 let mapleader=;
 
-" screen scrolling
-noremap <Space> <C-d>
-noremap J <C-d>
-noremap K <C-u>
-noremap <C-j> <C-e>
-noremap <C-k> <C-y>
-
-" easy-motion like moving bindings
-noremap gl :AceJumpLine<CR>
-noremap gw :AceJumpWithinLine<CR>
-noremap s :AceJumpChar<CR>
-
 set ignorecase
 set smartcase
+set nowrapscan
+
+" screen scrolling
+nnoremap <Space> <C-d>
+nnoremap J <C-d>
+nnoremap K <C-u>
+nnoremap <C-j> <C-e>
+nnoremap <C-k> <C-y>
+
+" easy-motion like moving bindings
+nnoremap gl :AceJumpLine<CR>
+nnoremap gw :AceJumpWord<CR>
+nnoremap gW :AceJumpWithinLine<CR>
+nnoremap gs :AceJumpChar<CR>
+nnoremap gf :ShowOverlay overlay=goto show_files=True<CR>
+nnoremap gm :ShowOverlay overlay=goto text=@<CR>
+nnoremap gM :GotoSymbolInProject<CR>
+nnoremap gd :GotoDefinition<CR>

@@ -5,13 +5,25 @@
 	"font_size": 24,
 	"ignored_packages":
 	[
+		"Anaconda",
 		"Six",
 		"Vintage",
 		"Vintageous",
 	],
 	"relative_line_numbers": true,
+	"word_wrap": false,
 
 	"neovintageous_build_version": 11100,
 	"vintageous_use_ctrl_keys": true,
 	"vintageous_reset_mode_when_switching_tabs": false,
+	"vintageous_handle_keys": {
+		"<C-a>": false,
+		"<C-c>": false,
+		"<C-v>": false,
+		"<C-x>": false,
+		"<C-z>": false,
+		"<C-Z>": false,
+	},
+	"hot_exit": false,
+	"remember_workspace": false,
 }
