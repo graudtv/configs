@@ -7,11 +7,11 @@ set smartcase
 set nowrapscan
 
 " screen scrolling
-nnoremap <Space> <C-d>
-nnoremap J <C-d>
-nnoremap K <C-u>
-nnoremap <C-j> <C-e>
-nnoremap <C-k> <C-y>
+noremap <Space> <C-d>
+noremap J <C-d>
+noremap K <C-u>
+noremap <C-j> <C-e>
+noremap <C-k> <C-y>
 
 " easy-motion like moving bindings
 nnoremap gl :AceJumpLine<CR>

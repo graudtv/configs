@@ -7,6 +7,7 @@ set incsearch	                 " incrimental search - show search result without
 set cursorline                 " highlight the current line
 set colorcolumn=80             " ruler
 set ignorecase smartcase       " more convenient search
+set wildmenu                   " pop-menu when searching files
 au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comments insertion
 
 "autocompletion settings 
@@ -71,7 +72,7 @@ map <C-n> :NERDTreeToggle<CR>
 
 "----- easymotion -----"
 map <Leader> <Plug>(easymotion-prefix)
-map s <Plug>(easymotion-s)
+map gs <Plug>(easymotion-s)
 map gl <Plug>(easymotion-bd-jk)
 map gw <Plug>(easymotion-bd-wl)
 
