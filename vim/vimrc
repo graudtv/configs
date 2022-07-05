@@ -3,16 +3,20 @@ set number                     " line numbers
 set rnu                        " relative line numbers. rnu + numbers ->
                                " also shows abs index of current line
 set hlsearch                   " highlight search results
-set incsearch	                 " incrimental search - show search result without pressing Enter
+set incsearch                  " incrimental search - show search result
+                               " without pressing Enter
 set cursorline                 " highlight the current line
 set colorcolumn=80             " ruler
 set ignorecase smartcase       " more convenient search
 set wildmenu                   " pop-menu when searching files
+set showcmd                    " show 'count' when entering commands like 10gg
+set showbreak=~~~              " prefix printed when wrapping lines
+set helpheight=80              " make :help window take the whole screen
 au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comments insertion
 
 "autocompletion settings 
 "set complete+=kspell
-"set shortmess+=c	 " don't give ins-completion-menu messages
+"set shortmess+=c   " don't give ins-completion-menu messages
 
 function! IndentWithTabs()
   set tabstop=4     " Size of a hard tabstop (ts).
