@@ -1,22 +1,22 @@
 "--------------- General settings ---------------"
+" display settings
 set number                     " line numbers
 set rnu                        " relative line numbers. rnu + numbers ->
                                " also shows abs index of current line
-set hlsearch                   " highlight search results
-set incsearch                  " incrimental search - show search result
-                               " without pressing Enter
 set cursorline                 " highlight the current line
-set colorcolumn=80             " ruler
-set ignorecase smartcase       " more convenient search
-set wildmenu                   " pop-menu when searching files
+set colorcolumn=80             " ruler (higlight 80-th column)
 set showcmd                    " show 'count' when entering commands like 10gg
 set showbreak=~~~              " prefix printed when wrapping lines
 set helpheight=80              " make :help window take the whole screen
+" search settings
+set hlsearch                   " highlight search results
+set noincsearch                " cursor behaves really odd under incremental
+                               " search, disable it
+set nowrapscan                 " wrapping makes it hard to follow the cursor
+set ignorecase smartcase       " more convenient search
+set wildmenu                   " pop-menu when searching files
+" other settings
 au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comments insertion
-
-"autocompletion settings 
-"set complete+=kspell
-"set shortmess+=c   " don't give ins-completion-menu messages
 
 function! IndentWithTabs()
   set tabstop=4     " Size of a hard tabstop (ts).
@@ -84,16 +84,6 @@ map gw <Plug>(easymotion-bd-wl)
 let g:easyescape_chars = { "f": 1, "j": 1 }
 let g:easyescape_timeout = 2000
 cnoremap fj <ESC>
-
-
-" Tab completion
-" will insert tab at beginning of line,
-" will use completion if not at beginning
-" function! InsertTabWrapper()
-"	return pumvisible() ? "\<C-y>" : "\<Tab>"
-"endfunction
-"inoremap <silent> <Tab> <c-r>=InsertTabWrapper()<cr>
-
 
 "--------------- raw custom bindings ---------------"
 map <Space> <C-d>
