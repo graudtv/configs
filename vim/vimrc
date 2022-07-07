@@ -5,6 +5,8 @@ set rnu                        " relative line numbers. rnu + numbers ->
                                " also shows abs index of current line
 set cursorline                 " highlight the current line
 set colorcolumn=80             " ruler (higlight 80-th column)
+set showmode                   " show current mode (insert/replace/etc)
+set ruler                      " show (line, colon) in the bottom menu
 set showcmd                    " show 'count' when entering commands like 10gg
 set showbreak=~~~              " prefix printed when wrapping lines
 set helpheight=80              " make :help window take the whole screen
@@ -16,7 +18,11 @@ set nowrapscan                 " wrapping makes it hard to follow the cursor
 set ignorecase smartcase       " more convenient search
 set wildmenu                   " pop-menu when searching files
 " other settings
-au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comments insertion
+set timeout                    " enable timeouts
+set timeoutlen=1000            " timeout for key bindings (ms)
+set ttimeoutlen=50             " timeout for multi-character key codes (ms)
+
+au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comment insertion
 
 function! IndentWithTabs()
   set tabstop=4     " Size of a hard tabstop (ts).
