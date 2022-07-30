@@ -5,11 +5,19 @@ set rnu                        " relative line numbers. rnu + numbers ->
                                " also shows abs index of current line
 set cursorline                 " highlight the current line
 set colorcolumn=80             " ruler (higlight 80-th column)
-set showmode                   " show current mode (insert/replace/etc)
+set noshowmode                 " don't show current mode (insert/replace/etc),
+                               " because airline plugin would do this
 set ruler                      " show (line, colon) in the bottom menu
 set showcmd                    " show 'count' when entering commands like 10gg
 set showbreak=~~~              " prefix printed when wrapping lines
 set helpheight=80              " make :help window take the whole screen
+set sidescroll=1               " scroll long lines by one symbol
+set sidescrolloff=5            " start scrolling long lines at specified offset
+" windows' settings
+set splitbelow                 " open new window below, not above
+set splitright                 " open new window right, not left
+set winheight=20               " use at least winheight rows for window
+set winwidth=84                " use at least winwidth columns for window
 " search settings
 set hlsearch                   " highlight search results
 set noincsearch                " cursor behaves really odd under incremental
@@ -18,11 +26,14 @@ set nowrapscan                 " wrapping makes it hard to follow the cursor
 set ignorecase smartcase       " more convenient search
 set wildmenu                   " pop-menu when searching files
 " other settings
+set hidden                     " allow hidding modified buffer
 set timeout                    " enable timeouts
 set timeoutlen=1000            " timeout for key bindings (ms)
 set ttimeoutlen=50             " timeout for multi-character key codes (ms)
+set modeline                   " read mode line if there's such one in a file
+" TODO: fix representation of tab names
 
-au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comment insertion
+" au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comment insertion
 
 function! IndentWithTabs()
   set tabstop=4     " Size of a hard tabstop (ts).
@@ -43,13 +54,19 @@ call IndentWithSpaces()
 
 "--------------- pre-config for vim-plug plugins  ---------------"
 " enable normal expansion of brackets and parentheses
-let delimitMate_expand_cr = 1
-let delimitMate_expand_space = 1
+" let delimitMate_expand_cr = 1
+" let delimitMate_expand_space = 1
 
 "--------------- vim-plug plugins ---------------"
 call plug#begin('~/.vim/plugged')
 " gruvbox -- color schemes
 Plug 'morhetz/gruvbox'
+
+" bufexplorer - quickly switching buffers
+Plug 'jlanzarotta/bufexplorer'
+
+" airline - nice status line at the bottom of the screen
+Plug 'vim-airline/vim-airline'
 
 " nerdtree -- viewing file tree inside vim
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -59,13 +76,13 @@ Plug 'easymotion/vim-easymotion'
 
 " AutoComplPop -- automatically opens popup menu for completions
 "                 in insert mode
-Plug 'vim-scripts/AutoComplPop' 
+" Plug 'vim-scripts/AutoComplPop' 
 
 " easyescape -- helps to get rid of undesired visual effects when
 "               using 'fd'/'fj' or similar sequence to escape insert mode
 Plug 'zhou13/vim-easyescape'    " escaping insert mode with 'fj' sequence
 
-Plug 'https://github.com/Raimondi/delimitMate'
+"Plug 'https://github.com/Raimondi/delimitMate'
 "Plug 'junegunn/vim-easy-align'
 "Plug 'jiangmiao/auto-pairs'
 "Plug https://github.com/ervandew/supertab
@@ -84,7 +101,8 @@ map <C-n> :NERDTreeToggle<CR>
 map <Leader> <Plug>(easymotion-prefix)
 map gs <Plug>(easymotion-s)
 map gl <Plug>(easymotion-bd-jk)
-map gw <Plug>(easymotion-bd-wl)
+map gw <Plug>(easymotion-bd-w)
+map ge <Plug>(easymotion-bd-e)
 
 "----- easyescape -----"
 let g:easyescape_chars = { "f": 1, "j": 1 }
@@ -97,3 +115,6 @@ map J <C-d>
 map K <C-u>
 map <C-j> <C-e>
 map <C-k> <C-y>
+map § `
+nmap <C-p> <C-w>
+
