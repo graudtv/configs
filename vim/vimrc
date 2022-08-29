@@ -1,56 +1,73 @@
-"--------------- General settings ---------------"
-" display settings
-set number                     " line numbers
-set rnu                        " relative line numbers. rnu + numbers ->
-                               " also shows abs index of current line
-set cursorline                 " highlight the current line
-set colorcolumn=80             " ruler (higlight 80-th column)
-set noshowmode                 " don't show current mode (insert/replace/etc),
-                               " because airline plugin would do this
-set ruler                      " show (line, colon) in the bottom menu
-set showcmd                    " show 'count' when entering commands like 10gg
-set showbreak=~~~              " prefix printed when wrapping lines
-set helpheight=80              " make :help window take the whole screen
-set sidescroll=1               " scroll long lines by one symbol
-set sidescrolloff=5            " start scrolling long lines at specified offset
-" windows' settings
-set splitbelow                 " open new window below, not above
-set splitright                 " open new window right, not left
-set winheight=20               " use at least winheight rows for window
-set winwidth=84                " use at least winwidth columns for window
-" search settings
-set hlsearch                   " highlight search results
-set noincsearch                " cursor behaves really odd under incremental
-                               " search, disable it
-set nowrapscan                 " wrapping makes it hard to follow the cursor
-set ignorecase smartcase       " more convenient search
-set wildmenu                   " pop-menu when searching files
-" other settings
-set hidden                     " allow hidding modified buffer
-set timeout                    " enable timeouts
-set timeoutlen=1000            " timeout for key bindings (ms)
-set ttimeoutlen=50             " timeout for multi-character key codes (ms)
-set modeline                   " read mode line if there's such one in a file
-" TODO: fix representation of tab names
-
-" au BufEnter * set fo-=c fo-=r fo-=o " disable automatic comment insertion
+"--------------- Useful functions ---------------"
+function! IndentWithSpaces()
+  set tabstop=8                " Display already existing tab symbols as
+                               " 8 spaces
+  set expandtab softtabstop=2 shiftwidth=2
+                               " Expand newly entered tabs into 2 spaces
+endfunction
 
 function! IndentWithTabs()
-  set tabstop=4     " Size of a hard tabstop (ts).
-  set shiftwidth=4  " Size of an indentation (sw).
-  set noexpandtab   " Always uses tabs instead of space characters (noet).
-  set autoindent    " Copy indent from current line when starting a new line (ai).
+  set tabstop=4 shiftwidth=4   " Display tabs as 4 spaces
+  set noexpandtab              " Don't expand tabs to spaces
 endfunction
 
-function! IndentWithSpaces()
-  set tabstop=2     " Size of a hard tabstop (ts).
-  set shiftwidth=2  " Size of an indentation (sw).
-  set expandtab     " Always uses spaces instead of tab characters (et).
-  set softtabstop=0 " Number of spaces a <Tab> counts for. When 0, featuer is off (sts).
-  set autoindent    " Copy indent from current line when starting a new line.
-  set smarttab      " Inserts blanks on a <Tab> key (as per sw, ts and sts).
-endfunction
+
+"--------------- General settings ---------------"
+" Display settings
+set number                     " Line numbers
+set rnu                        " Relative line numbers. rnu + number ->
+                               " also shows abs index of current line
+set cursorline                 " Highlight the current line
+set colorcolumn=80             " Ruler (higlight 80-th column)
+set noshowmode                 " Don't show current mode (insert/replace/etc),
+                               " because airline plugin does this
+set noruler                    " Don't show (line, colon) in the bottom menu,
+                               " because airline plugin does this
+set showcmd                    " Show 'count' when entering commands like 10gg
+set helpheight=80              " Make :help window take the whole screen
+set sidescroll=1               " Scroll long lines by one symbol
+set sidescrolloff=0            " Start scrolling long lines at specified.
+                               " offset. (default value ensured)
+" Text wrapping settings
+set nowrap                     " Disable wrapping by default
+set breakindent                " Keep indentation when wrapping
+set showbreak=>>               " Prefix to be printed when wrapping lines
+set linebreak                  " Wrap lines on word boundaries
+" Windows' settings
+set splitbelow                 " Open new window below, not above
+set splitright                 " Open new window to the right, not to the left
+set winheight=20               " Use at least winheight rows for window
+set winwidth=84                " Use at least winwidth columns for window
+" Search settings
+set hlsearch                   " Highlight search results
+set noincsearch                " Cursor behaves really odd under incremental
+                               " search, disable it
+set nowrapscan                 " Wrapping makes it hard to follow the cursor
+set ignorecase smartcase       " More convenient search
+" Command-line completion settings
+set wildmenu                   " Enable pop-up menu in command mode (useful
+                               " when entering filenames/options/etc)
+set wildmode=longest,list      " Bash-like completion style for wildmenu
+" indentation and formatting settings
+set textwidth=78               " automatically break too long lines
+set formatoptions-=r           " don't continue comment when pressing Enter
+                               " in insert mode within comment
+set formatoptions-=o           " don't continue comment when pressing o/O
+                               " withing comment
+set autoindent smartindent     " automatically insert indents (when starting
+                               " new line or similar)
 call IndentWithSpaces()
+" other settings
+set backspace=indent,eol,start " Enable backspace in insert mode
+set hidden                     " Allow hidding modified buffer
+set timeout                    " Enable timeouts
+set timeoutlen=1000            " Timeout for key bindings (ms)
+set ttimeoutlen=50             " Timeout for multi-character key codes (ms)
+set modeline                   " Read mode line if there's such one in a file
+set cryptmethod=blowfish2      " Decent encryption method (for 'vim -x ...')
+set nofixendofline             " Don't add eol if file doesn't have it
+" TODO: fix representation of tab names
+
 
 "--------------- pre-config for vim-plug plugins  ---------------"
 " enable normal expansion of brackets and parentheses
@@ -59,28 +76,37 @@ call IndentWithSpaces()
 
 "--------------- vim-plug plugins ---------------"
 call plug#begin('~/.vim/plugged')
-" gruvbox -- color schemes
-Plug 'morhetz/gruvbox'
+" easymotion -- quick moving inside text
+Plug 'easymotion/vim-easymotion'
 
-" bufexplorer - quickly switching buffers
+" easyescape -- helps to get rid of undesired visual effects when
+" using 'fd'/'fj' or similar sequence to escape insert mode
+Plug 'zhou13/vim-easyescape'
+
+" bufexplorer - convenient buffer switching window
 Plug 'jlanzarotta/bufexplorer'
+
+" gruvbox -- cool color scheme
+Plug 'morhetz/gruvbox'
 
 " airline - nice status line at the bottom of the screen
 Plug 'vim-airline/vim-airline'
 
-" nerdtree -- viewing file tree inside vim
+" vim-airline-themes - additional airline themes
+Plug 'vim-airline/vim-airline-themes'
+
+" nerdtree -- file tree viewer
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
-" easymotion -- quickly moving inside text
-Plug 'easymotion/vim-easymotion'
+" ctrlp - fuzzy search file/buffer/tag
+Plug 'ctrlpvim/ctrlp.vim'
+
+" tagbar - display tags
+" Plug 'preservim/tagbar'
 
 " AutoComplPop -- automatically opens popup menu for completions
 "                 in insert mode
 " Plug 'vim-scripts/AutoComplPop' 
-
-" easyescape -- helps to get rid of undesired visual effects when
-"               using 'fd'/'fj' or similar sequence to escape insert mode
-Plug 'zhou13/vim-easyescape'    " escaping insert mode with 'fj' sequence
 
 "Plug 'https://github.com/Raimondi/delimitMate'
 "Plug 'junegunn/vim-easy-align'
@@ -90,13 +116,6 @@ call plug#end()
 
 
 "--------------- plugins configuration ---------------"
-"----- gruvbox -----"
-colorscheme gruvbox
-set background=dark
-
-"----- nerdtree -----"
-map <C-n> :NERDTreeToggle<CR>
-
 "----- easymotion -----"
 map <Leader> <Plug>(easymotion-prefix)
 map gs <Plug>(easymotion-s)
@@ -109,12 +128,34 @@ let g:easyescape_chars = { "f": 1, "j": 1 }
 let g:easyescape_timeout = 2000
 cnoremap fj <ESC>
 
-"--------------- raw custom bindings ---------------"
-map <Space> <C-d>
-map J <C-d>
-map K <C-u>
-map <C-j> <C-e>
-map <C-k> <C-y>
-map § `
-nmap <C-p> <C-w>
+"----- bufexplorer -----"
+let g:bufExplorerShowNoName=1        " Show no-name buffers
 
+"----- gruvbox -----"
+colorscheme gruvbox
+set background=dark
+
+"----- nerdtree -----"
+map <C-n> :NERDTreeToggle<CR>
+" Make ENTER key inside NERDTree window work like 'go', not like 'o'
+let NERDTreeCustomOpenArgs = {'file': {'reuse':'currenttab', 'where':'p', 'keepopen':1, 'stay':1}}
+" TODO: unmap J & K keys
+"" call NERDTreeAddKeyMap({ 'key': 'K', 'callback': {-> feedkeys("\<C-d>", 'int')}, 'override': 1})
+
+"----- ctrlp -----"
+" search only through git files
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+
+"--------------- raw custom bindings ---------------"
+noremap <Space> <C-d>|          " Show next half-page of file
+noremap J <C-d>|                " Show next half-page of file
+noremap K <C-u>|                " Show previous half-page of file
+noremap <C-j> <C-e>|            " Show next line of file, don't move cursor
+noremap <C-k> <C-y>|            " Show previous line of file, don't move cursor
+noremap § `|                    " On MacBook keyboard '`' key has different
+                                " position from most of keyboards; instead,
+                                " '§' key is located where '`' is expected to be
+
+"--------------- raw custom commands ---------------"
+" open terminal in the current window
+command Eterm :term ++curwin
