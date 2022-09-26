@@ -1,16 +1,26 @@
-"--------------- Useful functions ---------------"
-function! IndentWithSpaces()
-  set tabstop=8                " Display already existing tab symbols as
-                               " 8 spaces
-  set expandtab softtabstop=2 shiftwidth=2
-                               " Expand newly entered tabs into 2 spaces
-endfunction
+"--------------- Useful functions/commands ---------------"
 
-function! IndentWithTabs()
-  set tabstop=4 shiftwidth=4   " Display tabs as 4 spaces
-  set noexpandtab              " Don't expand tabs to spaces
-endfunction
+" Display already existing tab symbols as 8 spaces
+" Expand newly entered tabs into 2 spaces
+command IndentWithSpaces
+  \ set tabstop=8 expandtab softtabstop=2 shiftwidth=2
 
+" Display tabs as 4 spaces
+" Pressing tab or shifting inserts tab symbol (not 4 spaces)
+command IndentWithTabs
+  \ set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+
+" Open terminal in the current window
+command Eterm
+  \ term ++curwin
+
+" In normal mode (:Run) runs the whole file as vim9 script
+" In visual mode ('<,'>:Run) runs the selected lines as vim9 script
+command -range=% Run
+  \ vim9 :<line1>,<line2>source
+
+" Even more quick mapping to run vim-script
+map \r :Run<CR>
 
 "--------------- General settings ---------------"
 " Display settings
@@ -48,16 +58,16 @@ set ignorecase smartcase       " More convenient search
 set wildmenu                   " Enable pop-up menu in command mode (useful
                                " when entering filenames/options/etc)
 set wildmode=longest,list      " Bash-like completion style for wildmenu
-" indentation and formatting settings
-set textwidth=78               " automatically break too long lines
-set formatoptions-=r           " don't continue comment when pressing Enter
+" Indentation and formatting settings
+set textwidth=78               " Automatically break too long lines
+set formatoptions-=r           " Don't continue comment when pressing Enter
                                " in insert mode within comment
-set formatoptions-=o           " don't continue comment when pressing o/O
+set formatoptions-=o           " Don't continue comment when pressing o/O
                                " withing comment
-set autoindent smartindent     " automatically insert indents (when starting
+set autoindent smartindent     " Automatically insert indents (when starting
                                " new line or similar)
-call IndentWithSpaces()
-" other settings
+IndentWithSpaces               " I prefer spaces to tabs
+" Other settings
 set backspace=indent,eol,start " Enable backspace in insert mode
 set hidden                     " Allow hidding modified buffer
 set timeout                    " Enable timeouts
@@ -66,7 +76,7 @@ set ttimeoutlen=50             " Timeout for multi-character key codes (ms)
 set modeline                   " Read mode line if there's such one in a file
 set cryptmethod=blowfish2      " Decent encryption method (for 'vim -x ...')
 set nofixendofline             " Don't add eol if file doesn't have it
-" TODO: fix representation of tab names
+" TODO: fix representation of tab names (tabline)
 
 
 "--------------- pre-config for vim-plug plugins  ---------------"
@@ -157,5 +167,3 @@ noremap § `|                    " On MacBook keyboard '`' key has different
                                 " '§' key is located where '`' is expected to be
 
 "--------------- raw custom commands ---------------"
-" open terminal in the current window
-command Eterm :term ++curwin
