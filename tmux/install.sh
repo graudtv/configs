@@ -1,8 +1,5 @@
-target="tmux"
-config_src=$(dirname "$0")/"tmux.conf"
-config_dst="${HOME}/.tmux.conf"
+cd "$(dirname "$0")"
+source ../impl/helpers.sh
 
-source impl/install-target.sh
-
-parse_options $@
-install_target
+parse_options tmux $@
+install_target tmux.conf "${HOME}/.tmux.conf" $opt_force $opt_symlink

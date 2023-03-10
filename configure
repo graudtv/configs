@@ -1,57 +1,56 @@
 usage() {
-	echo "This script helps to install configurations for different linux utilities"
-	echo ""
-	echo "Usage:"
-	echo "./configure --list                           # list available components"
-	echo "./confugure <component> [options...]         # run component installation script with specified options"
-	echo "./configure --help                           # print this help message"
-	echo
-	echo "Examples:"
-	echo "./configure vim"
-	echo "./configure vim --help"
+    echo "This script helps to install configurations for different linux utilities"
+    echo ""
+    echo "Usage:"
+    echo "./configure --list                           # list available components"
+    echo "./confugure <component> [options...]         # run component installation script with specified options"
+    echo "./configure --help                           # print this help message"
+    echo
+    echo "Examples:"
+    echo "./configure vim"
+    echo "./configure vim --help"
 }
 
 # $1 - directory name
 is_valid_component() {
-	[ -f "$1/install.sh" ]
-	return
+    [ -f "$1/install.sh" ]
+    return
 }
 
 list_components() {
-	echo "Configurations for the following components can be installed:"
-	# ls -d */ | cut -f1 -d'/' | awk '{ printf("%d")\n", ++i, $1) }'
-	i=1
-	ls -1d */ | while read component; do # iterating over directories. while is used to handle directories containing spaces
-		if is_valid_component $component; then
-			echo "$i) ${component%/}"
-			i=$(expr $i + 1)
-		fi
-	done
+    echo "Configurations for the following components can be installed:"
+    i=1
+    ls -1d */ | while read component; do # iterating over directories. while is used to handle directories containing spaces
+        if is_valid_component $component; then
+            echo "$i) ${component%/}"
+            i=$(expr $i + 1)
+        fi
+    done
 }
 
 if [ "$#" == 0 ]; then
-	usage
-	exit
+    usage
+    exit
 fi
 
 # handling options
 case $1 in
 "-h" | "--help")
-	usage
-	exit
-	;;
+    usage
+    exit
+    ;;
 "-l" | "--ls" | "--list")
-	list_components
-	exit
-	;;
+    list_components
+    exit
+    ;;
 esac
 
 # running installation script for particular component
 if is_valid_component "$1"; then
-	script="$1/install.sh"
-	shift
-	bash $script $@
+    script="$1/install.sh"
+    shift
+    bash $script $@
 else
-	printf "Error: component '%s' not found\n" $1
-	echo "Use './configure --list' to list available components"
+    printf "Error: component '%s' not found\n" $1
+    echo "Use './configure --list' to list available components"
 fi
