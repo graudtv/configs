@@ -16,7 +16,8 @@ install_file() {
     local force=$3
     local symlink=$4
 
-    if [ -z "$force" ] && ! get_user_consent "Override existing file $dst?"; then
+    if [ -z "$force" ] && [ -f "$dst" ] && \
+       ! get_user_consent "Override existing file $dst?"; then
         echo "Installation interrupted"
         exit 1
     fi
