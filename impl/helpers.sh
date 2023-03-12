@@ -25,9 +25,9 @@ install_file() {
     # are not available on Mac OS by default
     src="$PWD/$src"
     if [ -z $symlink ]; then # install by copy
-        install -v "$src" "$dst"
+        install "$src" "$dst"
     else
-        ln -sfv "$src" "$dst"
+        ln -sf "$src" "$dst"
     fi
 }
 

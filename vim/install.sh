@@ -8,9 +8,9 @@ install_plugins() {
       curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     fi
-    echo
-    echo "Now please open vim and print :PlugInstall to finish installation"
-    echo "Note. Some errors will be displayed during first vim opening, it's ok! Just ignore them and press Enter, as vim suggests, then run command above"
+    vim --cmd "let g:vimrc_bootstrap=1" -c ":PlugInstall | qall"
+    echo "----------"
+    echo "Configuration installed. Now you can run vim"
 }
 
 parse_default_options vim $@

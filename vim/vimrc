@@ -177,7 +177,7 @@ if IsSet('g:vimrc_bufexplorer_enabled')
 endif
 
 "----- gruvbox -----"
-if IsSet('g:vimrc_gruvbox_enabled')
+if IsSet('g:vimrc_gruvbox_enabled') && !IsSet('g:vimrc_bootstrap')
   colorscheme gruvbox
   exec "set background=" . get(g:, 'vimrc_gruvbox_background', "dark")
 endif
