@@ -15,4 +15,5 @@ install_plugins() {
 
 parse_default_options vim $@
 install_file vimrc "${HOME}/.vimrc" "$opt_force" "$opt_symlink"
+install_file config.vim "${HOME}/.vim/config.vim" "$opt_force" "$opt_symlink"
 install_plugins

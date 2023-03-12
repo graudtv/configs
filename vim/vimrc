@@ -1,3 +1,12 @@
+" Use `vim --cmd 'let g:vimrc_config="path/to/config"'` to run multiple
+" instances of vim with different configs
+" See details in ~/.vim/config.vim
+exec "source" get(g:, 'vimrc_config', '~/.vim/config.vim')
+
+function IsSet(variable)
+  return exists(a:variable) && eval(a:variable)
+endfunction
+
 "--------------- Useful functions/commands ---------------"
 
 " Display already existing tab symbols as 8 spaces
@@ -22,6 +31,15 @@ command -range=% Run
 " Even more quick mapping to run vim-script
 map \r :Run<CR>
 
+function ClangFormatFile()
+  let lineno = line(".")
+  exec "%!clang-format"
+  exec "normal" lineno . "gg"
+endfunction
+
+nnoremap <leader>f :call ClangFormatFile()<CR>
+vnoremap <leader>f :!clang-format<CR>
+
 "--------------- General settings ---------------"
 " Display settings
 set number                     " Line numbers
@@ -30,8 +48,6 @@ set rnu                        " Relative line numbers. rnu + number ->
 set cursorline                 " Highlight the current line
 set colorcolumn=80             " Ruler (higlight 80-th column)
 set noshowmode                 " Don't show current mode (insert/replace/etc),
-                               " because airline plugin does this
-set noruler                    " Don't show (line, colon) in the bottom menu,
                                " because airline plugin does this
 set showcmd                    " Show 'count' when entering commands like 10gg
 set helpheight=80              " Make :help window take the whole screen
@@ -54,6 +70,7 @@ set noincsearch                " Cursor behaves really odd under incremental
                                " search, disable it
 set nowrapscan                 " Wrapping makes it hard to follow the cursor
 set ignorecase smartcase       " More convenient search
+set tagcase=smart              " More convenient search for tags
 " Command-line completion settings
 set wildmenu                   " Enable pop-up menu in command mode (useful
                                " when entering filenames/options/etc)
@@ -78,83 +95,162 @@ set cryptmethod=blowfish2      " Decent encryption method (for 'vim -x ...')
 set nofixendofline             " Don't add eol if file doesn't have it
 " TODO: fix representation of tab names (tabline)
 
-
-"--------------- pre-config for vim-plug plugins  ---------------"
-" enable normal expansion of brackets and parentheses
-" let delimitMate_expand_cr = 1
-" let delimitMate_expand_space = 1
+augroup vimrc
+  au!
+augroup END
 
 "--------------- vim-plug plugins ---------------"
 call plug#begin('~/.vim/plugged')
 " easymotion -- quick moving inside text
-Plug 'easymotion/vim-easymotion'
+if IsSet('g:vimrc_easymotion_enabled')
+  Plug 'easymotion/vim-easymotion'
+endif
 
 " easyescape -- helps to get rid of undesired visual effects when
 " using 'fd'/'fj' or similar sequence to escape insert mode
-Plug 'zhou13/vim-easyescape'
+if IsSet('g:vimrc_easyescape_enabled')
+  Plug 'zhou13/vim-easyescape'
+endif
 
 " bufexplorer - convenient buffer switching window
-Plug 'jlanzarotta/bufexplorer'
+if IsSet('g:vimrc_bufexplorer_enabled')
+  Plug 'jlanzarotta/bufexplorer'
+endif
 
 " gruvbox -- cool color scheme
-Plug 'morhetz/gruvbox'
+if IsSet('g:vimrc_gruvbox_enabled')
+  Plug 'morhetz/gruvbox'
+endif
 
 " airline - nice status line at the bottom of the screen
-Plug 'vim-airline/vim-airline'
+if IsSet('g:vimrc_airline_enabled')
+  Plug 'vim-airline/vim-airline'
+endif
 
 " vim-airline-themes - additional airline themes
-Plug 'vim-airline/vim-airline-themes'
+if IsSet('g:vimrc_airline_themes_enabled')
+  Plug 'vim-airline/vim-airline-themes'
+endif
 
 " nerdtree -- file tree viewer
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+if IsSet('g:vimrc_nerdtree_enabled')
+  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+endif
 
 " ctrlp - fuzzy search file/buffer/tag
-Plug 'ctrlpvim/ctrlp.vim'
+if IsSet('g:vimrc_ctrlp_enabled')
+  Plug 'ctrlpvim/ctrlp.vim'
+endif
 
-" tagbar - display tags
-" Plug 'preservim/tagbar'
+" LSP-based code completion
+if IsSet('g:vimrc_ycm_enabled')
+  Plug 'ycm-core/YouCompleteMe',
+        \ { 'do': './install.py --clangd-completer', 'for': ['c', 'cpp'] }
+endif
 
-" AutoComplPop -- automatically opens popup menu for completions
-"                 in insert mode
-" Plug 'vim-scripts/AutoComplPop' 
-
+"Plug 'preservim/tagbar'
 "Plug 'https://github.com/Raimondi/delimitMate'
 "Plug 'junegunn/vim-easy-align'
 "Plug 'jiangmiao/auto-pairs'
-"Plug https://github.com/ervandew/supertab
 call plug#end()
 
 
 "--------------- plugins configuration ---------------"
 "----- easymotion -----"
-map <Leader> <Plug>(easymotion-prefix)
-map gs <Plug>(easymotion-s)
-map gl <Plug>(easymotion-bd-jk)
-map gw <Plug>(easymotion-bd-w)
-map ge <Plug>(easymotion-bd-e)
+if IsSet('g:vimrc_easymotion_enabled')
+  map gs <plug>(easymotion-s)
+  map gl <plug>(easymotion-bd-jk)
+  map gw <plug>(easymotion-bd-w)
+  map ge <plug>(easymotion-bd-e)
+endif
 
 "----- easyescape -----"
-let g:easyescape_chars = { "f": 1, "j": 1 }
-let g:easyescape_timeout = 2000
-cnoremap fj <ESC>
+if IsSet('g:vimrc_easyescape_enabled')
+  let g:easyescape_chars = { "f": 1, "j": 1 }
+  let g:easyescape_timeout = 2000
+  cnoremap fj <ESC>
+endif
 
 "----- bufexplorer -----"
-let g:bufExplorerShowNoName=1        " Show no-name buffers
+if IsSet('g:vimrc_bufexplorer_enabled')
+  let g:bufExplorerShowNoName=1        " Show no-name buffers
+endif
 
 "----- gruvbox -----"
-colorscheme gruvbox
-set background=dark
+if IsSet('g:vimrc_gruvbox_enabled')
+  colorscheme gruvbox
+  exec "set background=" . get(g:, 'vimrc_gruvbox_background', "dark")
+endif
+
+"----- airline -----"
+if IsSet('g:vimrc_airline_enabled')
+  " Don't show (line, colon) in the bottom menu, because airline does this
+  set noruler
+  " Configure whitespace extension checks
+  let whitespace_checks = get(g:, 'vimrc_airline_whitespace_checks', 'none')
+  if whitespace_checks == 'none'
+    " Disable all whitespace checks
+    let g:airline#extensions#whitespace#enabled = 0
+  elseif whitespace_checks == 'trailing'
+    " No mixed-indent checks, only checks for trailing spaces
+    let g:airline#extensions#whitespace#checks = [ 'trailing' ]
+  endif
+endif
 
 "----- nerdtree -----"
-map <C-n> :NERDTreeToggle<CR>
-" Make ENTER key inside NERDTree window work like 'go', not like 'o'
-let NERDTreeCustomOpenArgs = {'file': {'reuse':'currenttab', 'where':'p', 'keepopen':1, 'stay':1}}
-" TODO: unmap J & K keys
-"" call NERDTreeAddKeyMap({ 'key': 'K', 'callback': {-> feedkeys("\<C-d>", 'int')}, 'override': 1})
+if IsSet('g:vimrc_nerdtree_enabled')
+  map <C-n> :NERDTreeToggle<CR>
+  " Make ENTER key inside NERDTree window work like 'go', not like 'o'
+  let NERDTreeCustomOpenArgs = {'file': {'reuse':'currenttab', 'where':'p', 'keepopen':1, 'stay':1}}
+  " TODO: unmap J & K keys
+  "" call NERDTreeAddKeyMap({ 'key': 'K', 'callback': {-> feedkeys("\<C-d>", 'int')}, 'override': 1})
+endif
 
 "----- ctrlp -----"
-" search only through git files
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+if IsSet('g:vimrc_ctrlp_enabled')
+  " search only through git files
+  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+endif
+
+"----- YouCompleteMe -----"
+if IsSet('g:vimrc_ycm_enabled')
+  " Display warning and error signs in number column
+  set signcolumn=number
+  " Do not open previews/pop-ups without request
+  set completeopt=menuone
+  " Do not automatically open pop-ups with documentation
+  let g:ycm_auto_hover=''
+  " Disable identifier-based completion
+  let g:ycm_min_num_of_chars_for_completion=100
+  " Enable YCM only for C and C++ (and buffers without filetype)
+  let g:ycm_filetype_whitelist={'c': 1, 'cpp': 1, 'ycm_nofiletype': 1}
+  " Disable highlighting - doesn't work well with cursorline vim option
+  let g:ycm_enable_diagnostic_highlighting=0
+  let g:ycm_auto_trigger = get(g:, vimrc_ycm_enable_auto_trigger, 0)
+  let g:ycm_disable_signature_help = !get(g:, vimrc_ycm_enable_signature_help, 0)
+  " Don't automatically insert headers
+  let g:ycm_clangd_args = ['--header-insertion=never']
+
+  " Insert-mode mappings
+  let g:ycm_key_invoke_completion = '<C-k>'
+  imap <silent> <C-l> <plug>(YCMToggleSignatureHelp)
+
+  " (t)ype, (r)eference, (c)allers, (s)earch, (w)hat is this
+  noremap <silent> <leader>t :YcmCompleter GetType<CR>
+  noremap <silent> <leader>r :YcmCompleter GoToReferences<CR>
+  noremap <silent> <leader>c :YcmCompleter GoToCallers<CR>
+  nmap <leader>s <plug>(YCMFindSymbolInWorkspace)
+  nmap <leader>w <plug>(YCMHover)
+  nmap <leader>v <plug>(YCMHover)
+
+  " goto (f)ile, (p)rototype, (d)efinition, (a)lternate file
+  if IsSet('g:vimrc_ycm_enable_g_mappings')
+    au vimrc filetype c,cpp nmap <buffer> gf :YcmCompleter GoToInclude<CR>
+    au vimrc filetype c,cpp nmap <buffer> gp :YcmCompleter GoToDeclaration<CR>
+    au vimrc filetype c,cpp nmap <buffer> gd :YcmCompleter GoTo<CR>
+    au vimrc filetype c,cpp nmap <buffer> ga :YcmCompleter GoToAlternateFile<CR>
+  endif
+endif
 
 "--------------- raw custom bindings ---------------"
 noremap <Space> <C-d>|          " Show next half-page of file
@@ -166,4 +262,3 @@ noremap § `|                    " On MacBook keyboard '`' key has different
                                 " position from most of keyboards; instead,
                                 " '§' key is located where '`' is expected to be
 
-"--------------- raw custom commands ---------------"
