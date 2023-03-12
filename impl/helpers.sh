@@ -24,6 +24,7 @@ install_file() {
     # $PWD is used as a workaround for realpath or readlink -f, because they
     # are not available on Mac OS by default
     src="$PWD/$src"
+    mkdir -p $(dirname $dst)
     if [ -z $symlink ]; then # install by copy
         install "$src" "$dst"
     else
