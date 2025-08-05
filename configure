@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 usage() {
     echo "This script helps to install configurations for different linux utilities"
     echo ""
