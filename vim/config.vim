@@ -11,6 +11,7 @@ let g:vimrc_airline_themes_enabled=0
 let g:vimrc_nerdtree_enabled=1
 let g:vimrc_ctrlp_enabled=0
 let g:vimrc_ycm_enabled=0
+let g:vimrc_emmet_enabled=1
 
 " These options tweak some part of plugin behaviour, if plugin is enabled.
 " Otherwise, they have no effect

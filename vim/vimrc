@@ -14,10 +14,13 @@ endfunction
 command IndentWithSpaces
   \ set tabstop=8 expandtab softtabstop=2 shiftwidth=2
 
-" Display tabs as 4 spaces
-" Pressing tab or shifting inserts tab symbol (not 4 spaces)
+" Display tabs as 8 spaces
+" Pressing tab or shifting inserts tab symbol (not 8 spaces)
 command IndentWithTabs
-  \ set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+  \ set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
+
+command TrimTrailingSpaces
+  \ :%s/\s\+$//e
 
 " Open terminal in the current window
 command Eterm
@@ -37,8 +40,11 @@ function ClangFormatFile()
   exec "normal" lineno . "gg"
 endfunction
 
-nnoremap <leader>f :call ClangFormatFile()<CR>
-vnoremap <leader>f :!clang-format<CR>
+function PrettierFormatFile()
+  let lineno = line(".")
+  exec "%!npx prettier --parser=typescript"
+  exec "normal" lineno . "gg"
+endfunction
 
 "--------------- General settings ---------------"
 " Display settings
@@ -76,7 +82,7 @@ set wildmenu                   " Enable pop-up menu in command mode (useful
                                " when entering filenames/options/etc)
 set wildmode=longest,list      " Bash-like completion style for wildmenu
 " Indentation and formatting settings
-set textwidth=78               " Automatically break too long lines
+set textwidth=0                " Do not break too long lines
 set formatoptions-=r           " Don't continue comment when pressing Enter
                                " in insert mode within comment
 set formatoptions-=o           " Don't continue comment when pressing o/O
@@ -84,6 +90,9 @@ set formatoptions-=o           " Don't continue comment when pressing o/O
 set autoindent smartindent     " Automatically insert indents (when starting
                                " new line or similar)
 IndentWithSpaces               " I prefer spaces to tabs
+" Keymap
+set keymap=russian-jcukenwin   " Russian layout support
+set iminsert=0 imsearch=0      " Disable side-effects of previous command
 " Other settings
 set backspace=indent,eol,start " Enable backspace in insert mode
 set hidden                     " Allow hidding modified buffer
@@ -91,12 +100,16 @@ set timeout                    " Enable timeouts
 set timeoutlen=1000            " Timeout for key bindings (ms)
 set ttimeoutlen=50             " Timeout for multi-character key codes (ms)
 set modeline                   " Read mode line if there's such one in a file
-set cryptmethod=blowfish2      " Decent encryption method (for 'vim -x ...')
+"set cryptmethod=blowfish2      " Decent encryption method (for 'vim -x ...')
 set nofixendofline             " Don't add eol if file doesn't have it
 " TODO: fix representation of tab names (tabline)
 
 augroup vimrc
   au!
+  au Filetype c,cpp nnoremap <leader>f :call ClangFormatFile()<CR>
+  au Filetype c,cpp vnoremap <leader>f :!clang-format<CR>
+  au Filetype javascript,javascriptreact,typescript,typescriptcommon,typescriptreact
+    \ nnoremap <leader>f :call PrettierFormatFile()<CR>
 augroup END
 
 "--------------- vim-plug plugins ---------------"
@@ -148,6 +161,10 @@ if IsSet('g:vimrc_ycm_enabled')
         \ { 'do': './install.py --clangd-completer', 'for': ['c', 'cpp'] }
 endif
 
+if IsSet('g:vimrc_emmet_enabled')
+  Plug 'mattn/emmet-vim'
+endif
+
 "Plug 'preservim/tagbar'
 "Plug 'https://github.com/Raimondi/delimitMate'
 "Plug 'junegunn/vim-easy-align'
@@ -169,6 +186,7 @@ if IsSet('g:vimrc_easyescape_enabled')
   let g:easyescape_chars = { "f": 1, "j": 1 }
   let g:easyescape_timeout = 2000
   cnoremap fj <ESC>
+  cnoremap ао <ESC>
 endif
 
 "----- bufexplorer -----"
@@ -195,11 +213,18 @@ if IsSet('g:vimrc_airline_enabled')
     " No mixed-indent checks, only checks for trailing spaces
     let g:airline#extensions#whitespace#checks = [ 'trailing' ]
   endif
+  " Airline keymap extension config
+  let g:airline#extensions#keymap#label = ''
+  let g:airline#extensions#keymap#short_codes = {'russian-jcukenwin': '[ru]'}
 endif
 
 "----- nerdtree -----"
 if IsSet('g:vimrc_nerdtree_enabled')
-  map <C-n> :NERDTreeToggle<CR>
+  nnoremap <C-n> :NERDTreeToggle<CR>
+  nnoremap <leader>n :NERDTreeToggle<CR>
+
+  let g:NERDTreeWinPos = "right"
+
   " Make ENTER key inside NERDTree window work like 'go', not like 'o'
   let NERDTreeCustomOpenArgs = {'file': {'reuse':'currenttab', 'where':'p', 'keepopen':1, 'stay':1}}
   " TODO: unmap J & K keys
@@ -228,6 +253,8 @@ if IsSet('g:vimrc_ycm_enabled')
   let g:ycm_enable_diagnostic_highlighting=0
   let g:ycm_auto_trigger = get(g:, vimrc_ycm_enable_auto_trigger, 0)
   let g:ycm_disable_signature_help = !get(g:, vimrc_ycm_enable_signature_help, 0)
+  " Don't load conf files
+  let g:ycm_confirm_extra_conf = 0
   " Don't automatically insert headers
   let g:ycm_clangd_args = ['--header-insertion=never']
 
@@ -252,6 +279,16 @@ if IsSet('g:vimrc_ycm_enabled')
   endif
 endif
 
+"----- emmet -----"
+if IsSet('g:vimrc_emmet_enabled')
+  imap <c-y>e <Plug>(emmet-expand-abbr)<ESC>l
+  imap <c-y>i <Plug>(emmet-expand-abbr)
+  map <c-y>e <Plug>(emmet-expand-abbr)
+  map <c-y>i <Plug>(emmet-expand-abbr)
+  imap <c-y>u <c-o>u
+  imap <c-u> <c-o>u
+endif
+
 "--------------- raw custom bindings ---------------"
 noremap <Space> <C-d>|          " Show next half-page of file
 noremap J <C-d>|                " Show next half-page of file
@@ -262,3 +299,7 @@ noremap § `|                    " On MacBook keyboard '`' key has different
                                 " position from most of keyboards; instead,
                                 " '§' key is located where '`' is expected to be
 
+inoremap <C-l> <C-^>|           " Switch keyboard layout
+nnoremap <C-l> a<C-^><Esc>|     " The same, but for normal mode.
+                                " Note that <C-^> has different meaning in
+                                " normal mode
