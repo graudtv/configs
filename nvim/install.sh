@@ -7,6 +7,7 @@ find_neovim() {
   type nvim >&/dev/null && { echo "nvim"; return; }
   type nv >&/dev/null && { echo "nv"; return; }
   echo "Failed to find neovim. Is it installed?"
+  exit 1
 }
 
 
