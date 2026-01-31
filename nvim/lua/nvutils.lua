@@ -2,7 +2,7 @@
 local vim_pack_confirm = false;
 
 function nvim_minimum_required(version)
-  if not vim.fn.has("nvim-" .. version) then
+  if vim.fn.has("nvim-" .. version) ~= 1 then
     error(string.format("Too old neovim. At least v%s required", version))
   end
 end

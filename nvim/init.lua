@@ -173,7 +173,7 @@ require('lualine').setup({
   sections = {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff'},
-    lualine_c = {'filename'},
+    lualine_c = {'%f'},
     lualine_x = {'encoding'},
     lualine_y = {'filetype', 'lsp_status'},
     lualine_z = {'%p%% %l/%L:%c'},
@@ -203,22 +203,26 @@ vim.diagnostic.config({
     }
   }
 })
-vim.lsp.enable('clangd')
+--vim.lsp.enable('clangd')
 vim.o.signcolumn = 'yes'
+
+vim.keymap.set('n', 'gd', vim.lsp.buf.declaration)
 
 --------------- Raw custom bindings ---------------
 -- Show next half-page of file
-vim.keymap.set('n', '<Space>', '<C-d>')
-vim.keymap.set('n', 'J', '<C-d>')
+vim.keymap.set({'n', 'v'}, '<Space>', '<C-d>')
+vim.keymap.set({'n', 'v'}, 'J', '<C-d>')
 -- Show previous half-page of file
-vim.keymap.set('n', 'K', '<C-u>')
+vim.keymap.set({'n', 'v'}, 'K', '<C-u>')
 -- Show next line of file, don't move cursor
-vim.keymap.set('n', '<C-j>', '<C-e>')
+vim.keymap.set({'n', 'v'}, '<C-j>', '<C-e>')
 -- Show previous line of file, don't move cursor
-vim.keymap.set('n', '<C-k>', '<C-y>')
+vim.keymap.set({'n', 'v'}, '<C-k>', '<C-y>')
 -- On MacBook keyboard '`' key has different position from most of keyboards;
 -- instead, '§' key is located where '`' is expected to be
 vim.keymap.set('n', '§', '`')
 -- Switch keyboard layout. Note that <C-^> has different meaning in normal mode
 vim.keymap.set('i', '<C-l>', '<C-^>')
 vim.keymap.set('n', '<C-l>', 'a<C-^><Esc>')
+
+-- vim: filetype=lua
