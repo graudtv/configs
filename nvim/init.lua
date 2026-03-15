@@ -27,6 +27,11 @@ vim.api.nvim_create_user_command('Reload', function()
   vim.cmd.source(vim.fn.expand('$MYVIMRC'))
 end, {})
 
+-- Edit vim config
+vim.api.nvim_create_user_command('Edit', function()
+  vim.cmd.edit(vim.fn.expand('$MYVIMRC'))
+end, {})
+
 
 --------------- General settings ---------------
 -- [ Display settings ]
@@ -102,6 +107,7 @@ config = {
   easymotion = { enabled = true },
   easyescape = { enabled = true },
   bufexplorer = { enabled = true },
+  fzf = { enabled = true },
   colorscheme = 'onedark',
 }
 
@@ -127,6 +133,13 @@ if config.bufexplorer.enabled then
   add_package('jlanzarotta/bufexplorer')
   vim.g.bufExplorerShowNoName = 1
 end
+
+-- fuzzy search for files, tags and more
+if config.fzf.enabled then
+  add_package('junegunn/fzf')
+  add_package('junegunn/fzf.vim')
+end
+
 
 -- Colorschemes
 add_package('morhetz/gruvbox')
@@ -180,6 +193,8 @@ require('lualine').setup({
   },
 })
 
+-- Syntax highlighting for justfile-s
+add_package('NoahTheDuke/vim-just')
 
 add_package('neovim/nvim-lspconfig')
 -- add_package('nvim-treesitter/nvim-treesitter')
@@ -191,7 +206,6 @@ add_package('nvim-telescope/telescope.nvim')
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
-
 
 -- LSP
 vim.diagnostic.config({
