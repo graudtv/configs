@@ -1,5 +1,8 @@
 # Some helper utilities
 
+OPT_FORCE=
+OPT_SYMLINK=
+
 get_user_consent() {
     local prompt=$1
     read -p "$prompt (y/n): " -n 1 -r
@@ -10,22 +13,36 @@ get_user_consent() {
     return 1
 }
 
-install_file() {
-    local src=$1
-    local dst=$2
-    local force=$3
-    local symlink=$4
+is_same_file() {
+    local src="$1"
+    local dst="$2"
+    [ -n "$OPT_SYMLINK" ] \
+        && [ -L "$dst" ] \
+        && [ "$(readlink -f "$dst")" = "$(readlink -f "$src")" ] \
+        && return
+    [ -z "$OPT_SYMLINK" ] \
+        && [ -f "$dst" ] \
+        && ! [ -L "$dst" ] \
+        && diff -q "$src" "$dst" >/dev/null 2>&1 \
+        && return
+    return 1
+}
 
-    if [ -z "$force" ] && [ -f "$dst" ] && \
-       ! get_user_consent "Override existing file $dst?"; then
+install_file() {
+    local src="$1"
+    local dst="$2"
+
+    if [ -z "$OPT_FORCE" ] && ! is_same_file "$src" "$dst" \
+            && ! get_user_consent "Override existing file $dst?"; then
         echo "Installation interrupted"
         exit 1
     fi
+
     # $PWD is used as a workaround for realpath or readlink -f, because they
     # are not available on Mac OS by default
     src="$PWD/$src"
-    mkdir -p $(dirname $dst)
-    if [ -z $symlink ]; then # install by copy
+    mkdir -p "$(dirname "$dst")"
+    if [ -z "$OPT_SYMLINK" ]; then # install by copy
         install "$src" "$dst"
     else
         ln -sf "$src" "$dst"
@@ -41,16 +58,30 @@ print_default_usage() {
     echo "  -h, --help                  # print this help message"
 }
 
-# exports $opt_force and $opt_symlink
+# Exports $OPT_FORCE and $OPT_SYMLINK
 parse_default_options() {
     local target=$1; shift
+
     while [ $# != 0 ]; do
         case "$1" in
-        "-f" | "--force") opt_force=1 ;;
-        "-s" | "--symlink") opt_symlink=1 ;;
-        "-h" | "--help") print_default_usage $target; exit ;;
+        "-f" | "--force") OPT_FORCE=1 ;;
+        "-s" | "--symlink") OPT_SYMLINK=1 ;;
+        "-h" | "--help") print_default_usage "$target"; exit ;;
         *) echo "$0: unknown option '$1'"; exit 1 ;;
         esac
         shift
     done
+}
+
+# Install bash snippet into ~/.config/bash and source it from '~/.bashrc':
+install_bash_config_snippet() {
+    local snippet="$1"
+    local snippet_name="$(basename "$1")"
+
+    install_file "$snippet" "$HOME/.config/bash/$snippet_name"
+
+    if ! grep -qF "source \"\$HOME/.config/bash/$snippet_name\"" ~/.bashrc; then
+      echo "source \"\$HOME/.config/bash/$snippet_name\"" >> ~/.bashrc
+      echo "Note: you might need to run 'source ~/.bashrc' to configure current shell"
+    fi
 }

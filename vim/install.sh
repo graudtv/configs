@@ -1,5 +1,5 @@
-cd "$(dirname "$0")"
-source ../impl/helpers.sh
+#!/usr/bin/env bash
+set -euo pipefail && cd "$(dirname "$0")" && source ../impl/helpers.sh
 
 install_plugins() {
     if ! [ -e "${HOME}/.vim/autoload/plug.vim" ]; then
@@ -13,7 +13,7 @@ install_plugins() {
     echo "Configuration installed. Now you can run vim"
 }
 
-parse_default_options vim $@
-install_file vimrc "${HOME}/.vimrc" "$opt_force" "$opt_symlink"
-install_file config.vim "${HOME}/.vim/config.vim" "$opt_force" "$opt_symlink"
+parse_default_options vim "$@"
+install_file vimrc "${HOME}/.vimrc"
+install_file config.vim "${HOME}/.vim/config.vim"
 install_plugins

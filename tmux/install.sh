@@ -1,5 +1,5 @@
-cd "$(dirname "$0")"
-source ../impl/helpers.sh
+#!/usr/bin/env bash
+set -euo pipefail && cd "$(dirname "$0")" && source ../impl/helpers.sh
 
-parse_options tmux $@
-install_target tmux.conf "${HOME}/.tmux.conf" $opt_force $opt_symlink
+parse_default_options tmux "$@"
+install_file tmux.conf "${HOME}/.tmux.conf"

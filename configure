@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 usage() {
     echo "This script helps to install configurations for different linux utilities"
@@ -23,14 +24,14 @@ list_components() {
     echo "Configurations for the following components can be installed:"
     i=1
     ls -1d */ | while read component; do # iterating over directories. while is used to handle directories containing spaces
-        if is_valid_component $component; then
+        if is_valid_component "$component"; then
             echo "$i) ${component%/}"
             i=$(expr $i + 1)
         fi
     done
 }
 
-cd $(dirname $0)
+cd "$(dirname "$0")"
 
 if [ "$#" == 0 ]; then
     usage
@@ -53,8 +54,8 @@ esac
 if is_valid_component "$1"; then
     script="$1/install.sh"
     shift
-    bash $script $@
+    bash "$script" "$@"
 else
-    printf "Error: component '%s' not found\n" $1
+    echo "Error: component '$1' not found"
     echo "Use './configure --list' to list available components"
 fi
