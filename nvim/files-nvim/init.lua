@@ -52,6 +52,11 @@ vim.api.nvim_create_user_command('BackupFile', function()
   vim.cmd('write!', vim.fn.expand('%') .. '.orig')
 end, { desc = 'Create backup of the current file (adds .orig suffix)' })
 
+-- Trim trailing spaces from all lines
+vim.api.nvim_create_user_command('TrimTrailingSpaces', function()
+  vim.cmd("%s/\\s\\+$//e")
+end, {})
+
 vim.keymap.set('n', '<leader>e', function()
   local dirname = vim.fn.expand('%:h') .. '/'
   vim.api.nvim_feedkeys(":e " .. dirname, 'n', true)
@@ -123,6 +128,7 @@ vim.o.timeoutlen = 1000      -- Timeout for key bindings (ms)
 vim.o.ttimeoutlen = 50       -- Timeout for multi-character key codes (ms)
 vim.o.modeline = true        -- Read mode line if there's such one in a file
 vim.o.fixendofline = false   -- Don't add eol if file doesn't have it
+vim.o.autoread = false       -- Do not reload file without consent
 -- TODO: fix representation of tab names (tabline)
 
 --------------- Plugins ---------------
