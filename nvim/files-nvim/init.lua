@@ -4,59 +4,20 @@ nvim_minimum_required("0.12.0")
 
 --------------- Useful functions/commands ---------------
 
--- Display already existing tab symbols as 8 spaces
--- Expand newly entered tabs into 2 spaces
-vim.api.nvim_create_user_command('IndentWithSpaces', function()
-  vim.o.tabstop = 8
-  vim.o.softtabstop = 2
-  vim.o.shiftwidth = 2
-  vim.o.expandtab = true
-end, {})
+local commands = require('custom-commands')
+commands.bind("IndentWithSpaces", commands.indent_with_spaces)
+commands.bind("IndentWithTabs", commands.indent_with_tabs)
+commands.bind("Reload", commands.reload_nvim_config)
+commands.bind("Edit", commands.edit_nvim_config)
+commands.bind("Run", commands.run_nvim_script)
+commands.bind("BackupFile", commands.create_current_file_backup)
+commands.bind("TrimTrailingSpaces", commands.trim_trailing_spaces)
 
--- Display tabs as 8 spaces
--- Pressing tab or shifting inserts tab symbol (not 8 spaces)
-vim.api.nvim_create_user_command('IndentWithTabs', function()
-  vim.o.tabstop = 8
-  vim.o.softtabstop = 8
-  vim.o.shiftwidth = 8
-  vim.o.expandtab = false
-end, {})
+-- Keybinding for the Run command
+vim.keymap.set({'n', 'v'}, '<leader>r', ':Run<CR>', {
+  desc = 'Run the current file or visual selection as vim/lua script' })
 
--- Reload nvim config
-vim.api.nvim_create_user_command('Reload', function()
-  vim.cmd.source(vim.fn.expand('$MYVIMRC'))
-end, { desc = 'Reload nvim config' })
-
--- Edit nvim config
-vim.api.nvim_create_user_command('Edit', function()
-  vim.cmd.edit(vim.fn.expand('$MYVIMRC'))
-end, { desc = 'Edit nvim config' })
-
--- Source the current file or visual selection as vim/lua script
-vim.api.nvim_create_user_command('Run', function(args)
-  if vim.o.filetype == "" then
-    vim.notify("Cannot run this script: 'filetype' is not set")
-  elseif vim.o.filetype ~= "vim" and vim.o.filetype ~= "lua" then
-    vim.notify("Cannot run this script: 'filetype' is neither 'vim' or 'lua'")
-  else
-    vim.cmd(("%s,%s" .. "source"):format(args.line1, args.line2))
-  end
-end, { desc = 'Run the current file or visual selection as vim/lua script', range = "%" })
-
--- -- Keybinding for the Source command
-vim.keymap.set({'n', 'v'}, '<leader>r', ':Source<CR>', {
-  desc = 'Source the current file or visual selection as vim/lua script' })
-
--- Create backup of the current file
-vim.api.nvim_create_user_command('BackupFile', function()
-  vim.cmd('write!', vim.fn.expand('%') .. '.orig')
-end, { desc = 'Create backup of the current file (adds .orig suffix)' })
-
--- Trim trailing spaces from all lines
-vim.api.nvim_create_user_command('TrimTrailingSpaces', function()
-  vim.cmd("%s/\\s\\+$//e")
-end, {})
-
+-- Like :e, but start at the directory of the current file
 vim.keymap.set('n', '<leader>e', function()
   local dirname = vim.fn.expand('%:h') .. '/'
   vim.api.nvim_feedkeys(":e " .. dirname, 'n', true)

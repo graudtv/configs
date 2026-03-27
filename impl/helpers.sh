@@ -32,7 +32,7 @@ install_file() {
     local src="$1"
     local dst="$2"
 
-    if [ -z "$OPT_FORCE" ] && ! is_same_file "$src" "$dst" \
+    if [ -z "$OPT_FORCE" ] && [ -e "$dst" ] && ! is_same_file "$src" "$dst" \
             && ! get_user_consent "Override existing file $dst?"; then
         echo "Installation interrupted"
         exit 1
