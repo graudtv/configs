@@ -22,16 +22,40 @@ vim.api.nvim_create_user_command('IndentWithTabs', function()
   vim.o.expandtab = false
 end, {})
 
--- Reload vim config
+-- Reload nvim config
 vim.api.nvim_create_user_command('Reload', function()
   vim.cmd.source(vim.fn.expand('$MYVIMRC'))
-end, {})
+end, { desc = 'Reload nvim config' })
 
--- Edit vim config
+-- Edit nvim config
 vim.api.nvim_create_user_command('Edit', function()
   vim.cmd.edit(vim.fn.expand('$MYVIMRC'))
-end, {})
+end, { desc = 'Edit nvim config' })
 
+-- Source the current file or visual selection as vim/lua script
+vim.api.nvim_create_user_command('Run', function(args)
+  if vim.o.filetype == "" then
+    vim.notify("Cannot run this script: 'filetype' is not set")
+  elseif vim.o.filetype ~= "vim" and vim.o.filetype ~= "lua" then
+    vim.notify("Cannot run this script: 'filetype' is neither 'vim' or 'lua'")
+  else
+    vim.cmd(("%s,%s" .. "source"):format(args.line1, args.line2))
+  end
+end, { desc = 'Run the current file or visual selection as vim/lua script', range = "%" })
+
+-- -- Keybinding for the Source command
+vim.keymap.set({'n', 'v'}, '<leader>r', ':Source<CR>', {
+  desc = 'Source the current file or visual selection as vim/lua script' })
+
+-- Create backup of the current file
+vim.api.nvim_create_user_command('BackupFile', function()
+  vim.cmd('write!', vim.fn.expand('%') .. '.orig')
+end, { desc = 'Create backup of the current file (adds .orig suffix)' })
+
+vim.keymap.set('n', '<leader>e', function()
+  local dirname = vim.fn.expand('%:h') .. '/'
+  vim.api.nvim_feedkeys(":e " .. dirname, 'n', true)
+end, { desc = 'Like :e, but start at the directory of the current file' })
 
 --------------- General settings ---------------
 -- [ Display settings ]
