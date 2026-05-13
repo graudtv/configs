@@ -36,6 +36,10 @@ update-nvim: (_pm_install "wget") install-fuse
   {{sudo}} wget https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-x86_64.appimage -O /usr/local/bin/nvim
   {{sudo}} chmod +x /usr/local/bin/nvim
 
+[group('update-packages')]
+update-kitty:
+    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+
 [group('packages')]
 install-nvim:
   #!/bin/bash -eu
@@ -43,6 +47,15 @@ install-nvim:
     echo "{{style("command")}}nvim already installed{{NORMAL}}"
   else
     just update-nvim
+  fi
+
+[group('packages')]
+install-kitty:
+  #!/bin/bash -eu
+  if command -v kitty &>/dev/null; then
+    echo "{{style("command")}}kitty already installed ($(kitty --version)){{NORMAL}}"
+  else
+    just update-kitty
   fi
 
 [group('packages')]
