@@ -10,6 +10,11 @@ function commands.bind(name, command)
   vim.api.nvim_create_user_command(name, command.command, command.opts)
 end
 
+-- Register a one-shot hook for the commands.reload_nvim_config command
+function commands.on_reload(func, ...)
+  require("reload-hooks").add(func, ...)
+end
+
 -- I'm not sure if it's useful, but this can be used as
 -- commands.some_command:bind('SomeName')
 local function rbind(self, name)
@@ -46,8 +51,9 @@ end, { desc = "Use tabs for indentation" })
 
 -- Reload nvim config
 create_command('reload_nvim_config', function()
-  package.loaded['nvutils'] = nil
-  package.loaded['custom-commands'] = nil
+  -- package.loaded['nvutils'] = nil
+  -- package.loaded['custom-commands'] = nil
+  require("reload-hooks").run()
   vim.cmd.source(vim.fn.expand('$MYVIMRC'))
 end, { desc = 'Reload nvim config' })
 
@@ -77,5 +83,10 @@ create_command('run_nvim_script', function(args)
   end
 end, { desc = 'Run the current file or visual selection as vim/lua script', range = "%" })
 
+-- Run chmod +x on the current file
+create_command('chmod_x_self', function()
+  vim.fn.system(("chmod +x '%s'"):format(vim.fn.expand('%')))
+  vim.cmd.edit()
+end, { desc = 'Run chmod +x on the current file' })
 
 return commands

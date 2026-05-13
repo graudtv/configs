@@ -1,3 +1,4 @@
+--require 'unrequire'
 require 'nvutils'
 
 nvim_minimum_required("0.12.0")
@@ -12,6 +13,11 @@ commands.bind("Edit", commands.edit_nvim_config)
 commands.bind("Run", commands.run_nvim_script)
 commands.bind("BackupFile", commands.create_current_file_backup)
 commands.bind("TrimTrailingSpaces", commands.trim_trailing_spaces)
+commands.bind("ChmodXSelf", commands.chmod_x_self)
+
+on_reload = commands.on_reload
+on_reload(reload_package, 'nvutils')
+on_reload(reload_package, 'custom-commands')
 
 -- Keybinding for the Run command
 vim.keymap.set({'n', 'v'}, '<leader>r', ':Run<CR>', {
@@ -22,6 +28,21 @@ vim.keymap.set('n', '<leader>e', function()
   local dirname = vim.fn.expand('%:h') .. '/'
   vim.api.nvim_feedkeys(":e " .. dirname, 'n', true)
 end, { desc = 'Like :e, but start at the directory of the current file' })
+
+local augroup = vim.api.nvim_create_augroup("nvimrc", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "kitty",
+  group = augroup,
+  callback = function()
+    vim.api.nvim_create_autocmd("BufWritePost", {
+      buffer = 0,
+      callback = function()
+        vim.fn.system("kitten @ load-config")
+      end,
+    })
+  end,
+})
 
 --------------- General settings ---------------
 -- [ Display settings ]
@@ -94,16 +115,31 @@ vim.o.autoread = false       -- Do not reload file without consent
 
 --------------- Plugins ---------------
 
-config = {
+config = skip_disabled {
   easymotion = { enabled = true },
   easyescape = { enabled = true },
   bufexplorer = { enabled = true },
   fzf = { enabled = true },
+  colorschemes = {
+    ['morhetz/gruvbox'] = { enabled = true },
+    ['folke/tokyonight.nvim'] = { enabled = true },
+    ['rebelot/kanagawa.nvim'] = { enabled = true },
+    ['catppuccin/nvim'] = { enabled = true },
+    ['navarasu/onedark.nvim'] = { enabled = true },
+    ['sainnhe/gruvbox-material'] = {
+      enabled = true,
+      vars = { gruvbox_material_background = 'dark' },
+    },
+    ['sainnhe/everforest'] = {
+      enabled = true,
+      vars = { everforest_background = 'hard' },
+    },
+  },
   colorscheme = 'onedark',
 }
 
 -- easymotion -- quick movement within text
-if config.easymotion.enabled then
+if config.easymotion then
   add_package('easymotion/vim-easymotion')
   vim.keymap.set('n', 'gs', '<plug>(easymotion-s)')
   vim.keymap.set('n', 'gl', '<plug>(easymotion-bd-jk)')
@@ -113,33 +149,37 @@ end
 
 -- easyescape -- helps to get rid of undesired visual effects when using
 -- 'fd'/'fj' or similar sequence to escape insert mode
-if config.easyescape.enabled then
+if config.easyescape then
   add_package('zhou13/vim-easyescape')
   vim.g.easyescape_chars = { f = 1, j = 1 }
   vim.g.easyescape_timeout = 2000
   vim.keymap.set('c', 'fg', '<Esc>')
 end
 
-if config.bufexplorer.enabled then
+if config.bufexplorer then
   add_package('jlanzarotta/bufexplorer')
   vim.g.bufExplorerShowNoName = 1
 end
 
 -- fuzzy search for files, tags and more
-if config.fzf.enabled then
+if config.fzf then
   add_package('junegunn/fzf')
   add_package('junegunn/fzf.vim')
 end
 
-
 -- Colorschemes
-add_package('morhetz/gruvbox')
-add_package('folke/tokyonight.nvim')
-add_package('rebelot/kanagawa.nvim')
-add_package('catppuccin/nvim')
-add_package('sainnhe/gruvbox-material')
-add_package('navarasu/onedark.nvim')
-add_package('sainnhe/everforest')
+for colorscheme, opts in pairs(config.colorschemes) do
+  add_package(colorscheme)
+  for var, value in pairs(config.colorschemes.vars or {}) do
+    vim.g[var] = value
+  end
+end
+
+-- vim.g.airline_theme = 'catppuccin'
+require('onedark').setup({style = 'warmer'})
+
+vim.cmd.colorscheme(config.colorscheme)
+
 
 --[[
 add_package('graudtv/picktheme.nvim')
@@ -155,15 +195,6 @@ picktheme.add{
   end
 }
 --]]
-
--- vim.g.gruvbox_material_background = 'hard'
-vim.g.gruvbox_material_foreground = "mix"
--- vim.g.airline_theme = 'catppuccin'
-require('onedark').setup({style = 'warmer'})
-
-vim.g.everforest_background = 'hard'
-
-vim.cmd.colorscheme(config.colorscheme)
 
 -- Nerd Font icons for filetypes and other stuff
 add_package('nvim-tree/nvim-web-devicons')
