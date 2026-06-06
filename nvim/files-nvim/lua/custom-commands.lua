@@ -70,6 +70,7 @@ end, { desc = 'Create backup of the current file (adds .orig suffix)' })
 -- Trim trailing spaces from all lines
 create_command('trim_trailing_spaces', function()
   vim.cmd("%s/\\s\\+$//e")
+  vim.cmd.noh();
 end, { desc = 'Trim trailing spaces from all lines'})
 
 -- Source the current file or visual selection as vim/lua script
