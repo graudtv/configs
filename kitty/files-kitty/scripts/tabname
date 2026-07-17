@@ -1,0 +1,10 @@
+if [ "$#" -ge "2" -o "$1" = "-h" -o "$2" = "--help" ]; then
+  echo "Usage: $(basename $0) [tabname]"
+elif [ "$#" = "0" ]; then
+  printf "tabname: "
+  if read -r name; then
+    [ -n "$name" ] && kitten @ set-tab-title "$name"
+  fi
+else
+  kitten @ set-tab-title "$1"
+fi
