@@ -8,6 +8,7 @@ local commands = {}
 
 function commands.bind(name, command)
   vim.api.nvim_create_user_command(name, command.command, command.opts)
+  return command
 end
 
 -- Register a one-shot hook for the commands.reload_nvim_config command
@@ -17,15 +18,22 @@ end
 
 -- I'm not sure if it's useful, but this can be used as
 -- commands.some_command:bind('SomeName')
-local function rbind(self, name)
+local function bind_method(self, name)
   commands.bind(name, self)
+  return self
+end
+
+local function keymap_method(self, mode, keys)
+  vim.keymap.set(mode, keys, self.command, { desc = self.opts.desc })
+  return self
 end
 
 local function create_command(name, command, opts)
   commands[name] = {
     command = command,
     opts = opts,
-    bind = rbind
+    bind = bind_method,
+    keymap = keymap_method
   }
 end
 
@@ -89,5 +97,14 @@ create_command('chmod_x_self', function()
   vim.fn.system(("chmod +x '%s'"):format(vim.fn.expand('%')))
   vim.cmd.edit()
 end, { desc = 'Run chmod +x on the current file' })
+
+create_command('diagnostic_toggle', function ()
+  if vim.diagnostic.config().virtual_lines then
+    vim.diagnostic.config({virtual_text = true, virtual_lines = false})
+  else
+    vim.diagnostic.config({virtual_text = false, virtual_lines = true})
+  end
+end, { desc = 'Toggle diagnostic display mode'})
+
 
 return commands

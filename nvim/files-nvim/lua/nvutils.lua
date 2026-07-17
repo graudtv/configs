@@ -17,7 +17,7 @@ end
 
 function reload_package(pkg)
   package.loaded[pkg] = nil
-  require(pkg)
+  return require(pkg)
 end
 
 -- Omit any table that has `enabled = false` property
@@ -34,4 +34,11 @@ function skip_disabled(config)
   end
   res.enabled = nil
   return res
+end
+
+-- Bind config options to setup() function in plugin
+function mksetup(plugin, config)
+  return function ()
+    require(plugin).setup(config or {})
+  end
 end

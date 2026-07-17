@@ -24,6 +24,10 @@
       "rev": "e4359a2f80ef7275b080be180841c62ca8322757",
       "src": "https://github.com/sainnhe/gruvbox-material"
     },
+    "guess-indent.nvim": {
+      "rev": "84a4987ff36798c2fc1169cbaff67960aed9776f",
+      "src": "https://github.com/NMAC427/guess-indent.nvim"
+    },
     "kanagawa.nvim": {
       "rev": "aef7f5cec0a40dbe7f3304214850c472e2264b10",
       "src": "https://github.com/rebelot/kanagawa.nvim"
@@ -83,6 +87,10 @@
     "vim-fugitive": {
       "rev": "61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4",
       "src": "https://github.com/tpope/vim-fugitive"
+    },
+    "vim-gas": {
+      "rev": "fb0442f37e2db49a2e7a18e21dfc87a443020c8d",
+      "src": "https://github.com/HealsCodes/vim-gas"
     },
     "vim-just": {
       "rev": "11b0f3177e2854cafa0c4baef5329e7d0f0dccbd",
