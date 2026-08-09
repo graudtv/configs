@@ -109,6 +109,9 @@ vim.keymap.set('n', '<leader>u', function()
   vim.api.nvim_buf_set_lines(0, cstart, cstart + 1, true, {})
 end, { desc = 'Remove surrounding comment' })
 
+-- Copy visual selection to clipboard
+vim.keymap.set('v', 'Y', '"+y')
+
 -- Keybinding for the Run command
 vim.keymap.set({'n', 'v'}, '<leader>r', ':Run<CR>', {
   desc = 'Run the current file or visual selection as vim/lua script' })
