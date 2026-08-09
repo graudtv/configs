@@ -5,6 +5,7 @@ CONFDIR="${HOME}/.config/kitty"
 
 parse_default_options nvim "$@"
 install_file "files-kitty/kitty.conf" "${CONFDIR}/kitty.conf"
+install_file "files-kitty/tab_bar.py" "${CONFDIR}/tab_bar.py"
 install_file "files-kitty/default.conf" "${CONFDIR}/default.conf"
 install_file "files-kitty/current-theme.conf" "${CONFDIR}/current-theme.conf"
 install_file "files-kitty/scripts/tabname" "${CONFDIR}/scripts/tabname"
