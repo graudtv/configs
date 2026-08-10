@@ -11,6 +11,10 @@ function commands.bind(name, command)
   return command
 end
 
+function commands.keymap(mode, lhs, cmd)
+  vim.keymap.set(mode, lhs, cmd.command)
+end
+
 -- Register a one-shot hook for the commands.reload_nvim_config command
 function commands.on_reload(func, ...)
   require("reload-hooks").add(func, ...)
@@ -105,6 +109,93 @@ create_command('diagnostic_toggle', function ()
     vim.diagnostic.config({virtual_text = false, virtual_lines = true})
   end
 end, { desc = 'Toggle diagnostic display mode'})
+
+create_command('pp_comment_v_toggle', function()
+  local vbegin = math.min(vim.fn.line('.'), vim.fn.line('v'))
+  local vend = math.max(vim.fn.line('.'), vim.fn.line('v'))
+  local cond = vim.api.nvim_buf_get_lines(0, vbegin - 2, vbegin - 1, false)[1]
+  local fi = vim.api.nvim_buf_get_lines(0, vbegin - 2, vbegin - 1, false)[1]
+  if cond == "#if 0" then
+    vim.api.nvim_buf_set_lines(0, vbegin - 2, vbegin - 1, true, { "#if 1" })
+  elseif cond == "#if 1" then
+    vim.api.nvim_buf_set_lines(0, vbegin - 2, vbegin - 1, true, { "#if 0" })
+  else
+    vim.api.nvim_buf_set_lines(0, vend, vend, true, { "#endif" })
+    vim.api.nvim_buf_set_lines(0, vbegin - 1, vbegin - 1, true, { "#if 0" })
+  end
+  -- exit v mode
+  local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
+  vim.api.nvim_feedkeys(esc, "x", false)
+end, { desc = 'Wrap visual block into preprocessor-style comment or toggle comment' })
+
+create_command('pp_comment_n_toggle', function()
+  local idx = vim.fn.line('.') - 1
+  while idx >= 0 do
+    local cond = vim.api.nvim_buf_get_lines(0, idx, idx + 1, true)[1]
+    if cond == "#if 0" then
+      vim.api.nvim_buf_set_lines(0, idx, idx + 1, true, { "#if 1" })
+      return
+    end
+    if cond == "#if 1" then
+      vim.api.nvim_buf_set_lines(0, idx, idx + 1, true, { "#if 0" })
+      return
+    end
+    idx = idx - 1
+  end
+  vim.notify("Not inside comment block", vim.log.levels.ERROR)
+end, { desc = 'Toggle surrounding preprocessor-style comment' })
+
+create_command('pp_comment_n_delete', function()
+  local function starts_with(s, prefix)
+    return string.sub(s, 1, #prefix) == prefix
+  end
+
+  local function find_start()
+    local idx = vim.fn.line('.') - 1
+    local skip = 0
+    while idx >= 0 do
+      local line = vim.api.nvim_buf_get_lines(0, idx, idx + 1, true)[1]
+      if (line == '#if 0' or line == '#if 1') and skip >= 0 then
+        return idx, skip
+      elseif starts_with(line, '#if') then
+        skip = skip + 1
+      elseif starts_with(line, '#endif') then
+        skip = skip - 1
+      end
+      idx = idx - 1
+    end
+  end
+
+  local function find_end(skip)
+    local idx = vim.fn.line('.') - 1
+    while idx >= 0 do
+      local line = vim.api.nvim_buf_get_lines(0, idx, idx + 1, true)[1]
+      if starts_with(line, '#endif') then
+        if skip > 0 then
+          skip = skip - 1
+        else
+          return idx
+        end
+      elseif starts_with(line, '#if') then
+        skip = skip + 1
+      end
+      idx = idx + 1
+    end
+  end
+
+  local cstart, skip = find_start()
+  if cstart == nil then
+    vim.notify("Not inside comment block (failed to find block start)", vim.log.levels.ERROR)
+    return
+  end
+  local cend = find_end(skip)
+  if cend == nil then
+    vim.notify("Not inside comment block (failed to find block end)", vim.log.levels.ERROR)
+    return
+  end
+  vim.api.nvim_buf_set_lines(0, cend, cend + 1, true, {})
+  vim.api.nvim_buf_set_lines(0, cstart, cstart + 1, true, {})
+end, { desc = 'Remove surrounding preprocessor-style comment' })
 
 
 return commands

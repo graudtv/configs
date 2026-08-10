@@ -15,99 +15,16 @@ commands.bind("BackupFile", commands.create_current_file_backup)
 commands.bind("TrimTrailingSpaces", commands.trim_trailing_spaces)
 commands.bind("ChmodXSelf", commands.chmod_x_self)
 commands.bind("DiagnosticToggle", commands.diagnostic_toggle):keymap('n', '<leader>dt')
--- commands.diagnostic_toggle:bind('DiagnosticToggle'):keymap('n', '<leader>de')
 
 on_reload = commands.on_reload
 on_reload(reload_package, 'nvutils')
 on_reload(reload_package, 'custom-commands')
 
-vim.keymap.set('v', 'c', function()
-  local vbegin = math.min(vim.fn.line('.'), vim.fn.line('v'))
-  local vend = math.max(vim.fn.line('.'), vim.fn.line('v'))
-  local cond = vim.api.nvim_buf_get_lines(0, vbegin - 2, vbegin - 1, false)[1]
-  local fi = vim.api.nvim_buf_get_lines(0, vbegin - 2, vbegin - 1, false)[1]
-  if cond == "#if 0" then
-    vim.api.nvim_buf_set_lines(0, vbegin - 2, vbegin - 1, true, { "#if 1" })
-  elseif cond == "#if 1" then
-    vim.api.nvim_buf_set_lines(0, vbegin - 2, vbegin - 1, true, { "#if 0" })
-  else
-    vim.api.nvim_buf_set_lines(0, vend, vend, true, { "#endif" })
-    vim.api.nvim_buf_set_lines(0, vbegin - 1, vbegin - 1, true, { "#if 0" })
-  end
-  -- exit v mode
-  local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-  vim.api.nvim_feedkeys(esc, "x", false)
-end, { desc = 'Wrap visual block into comment or toggle comment' })
-
-vim.keymap.set('n', '<leader>c', function()
-  local idx = vim.fn.line('.') - 1
-  while idx >= 0 do
-    local cond = vim.api.nvim_buf_get_lines(0, idx, idx + 1, true)[1]
-    if cond == "#if 0" then
-      vim.api.nvim_buf_set_lines(0, idx, idx + 1, true, { "#if 1" })
-      return
-    end
-    if cond == "#if 1" then
-      vim.api.nvim_buf_set_lines(0, idx, idx + 1, true, { "#if 0" })
-      return
-    end
-    idx = idx - 1
-  end
-  vim.notify("Not inside comment block", vim.log.levels.ERROR)
-end, { desc = 'Toggle surrounding comment' })
-
--- delete comment
-vim.keymap.set('n', '<leader>u', function()
-  local function starts_with(s, prefix)
-    return string.sub(s, 1, #prefix) == prefix
-  end
-
-  local function find_start()
-    local idx = vim.fn.line('.') - 1
-    local skip = 0
-    while idx >= 0 do
-      local line = vim.api.nvim_buf_get_lines(0, idx, idx + 1, true)[1]
-      if (line == '#if 0' or line == '#if 1') and skip >= 0 then
-        return idx, skip
-      elseif starts_with(line, '#if') then
-        skip = skip + 1
-      elseif starts_with(line, '#endif') then
-        skip = skip - 1
-      end
-      idx = idx - 1
-    end
-  end
-
-  local function find_end(skip)
-    local idx = vim.fn.line('.') - 1
-    while idx >= 0 do
-      local line = vim.api.nvim_buf_get_lines(0, idx, idx + 1, true)[1]
-      if starts_with(line, '#endif') then
-        if skip > 0 then
-          skip = skip - 1
-        else
-          return idx
-        end
-      elseif starts_with(line, '#if') then
-        skip = skip + 1
-      end
-      idx = idx + 1
-    end
-  end
-
-  local cstart, skip = find_start()
-  if cstart == nil then
-    vim.notify("Not inside comment block (failed to find block start)", vim.log.levels.ERROR)
-    return
-  end
-  local cend = find_end(skip)
-  if cend == nil then
-    vim.notify("Not inside comment block (failed to find block end)", vim.log.levels.ERROR)
-    return
-  end
-  vim.api.nvim_buf_set_lines(0, cend, cend + 1, true, {})
-  vim.api.nvim_buf_set_lines(0, cstart, cstart + 1, true, {})
-end, { desc = 'Remove surrounding comment' })
+-- Preprocessor-style comments
+commands.keymap('v', 'c', commands.pp_comment_v_toggle)
+commands.keymap('n', '<leader>c', commands.pp_comment_n_toggle)
+commands.keymap('n', '<leader>u', commands.pp_comment_n_delete)
+vim.keymap.set('n', '<leader>C', '<leader>u', { remap=true })
 
 -- Copy visual selection to clipboard
 vim.keymap.set('v', 'Y', '"+y')
@@ -137,7 +54,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.keymap.set('n', '<leader>C', '<leader>u', { remap=true })
 
 --------------- General settings ---------------
 -- [ Display settings ]
