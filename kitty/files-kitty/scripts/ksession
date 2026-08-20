@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+
+import argparse
+import yaml
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+CONFIG_PATH = Path('~/.config/kitty/ksession').expanduser()
+
+def get_open_tags():
+    tags = []
+    oswindows = json.loads(subprocess.check_output(['kitten', '@', 'ls']))
+    for osw in oswindows:
+        for tab in osw['tabs']:
+            for win in tab['windows']:
+                if (tag := win['user_vars'].get('ksession.tag')):
+                    tags.append(tag)
+    return tags
+
+def list_sessions():
+    print("Available sessions:")
+    files = [str(f) for f in CONFIG_PATH.iterdir() if f.is_file()]
+    for f in CONFIG_PATH.iterdir():
+        if f.is_file():
+            print(" ", str(f.relative_to(CONFIG_PATH)).removesuffix('.yaml'))
+
+class SessionManager:
+    def __init__(self):
+        self.opened_tags = get_open_tags()
+
+    def open_tab(self, tab):
+        tag = tab.get('tag')
+        if tag and tag in self.opened_tags:
+            return
+
+        title = tab.get('title')
+        cwd = tab.get('cwd')
+        run = tab.get('run')
+        ssh = tab.get('ssh')
+
+        cmd = ['kitty', '@', 'launch', '--type=tab']
+        cmd += ['--tab-title', title] if title else []
+        cmd += ['--var', f'ksession.tag={tag}'] if tag else []
+        if ssh:
+            cmd += ['kitten', 'ssh', '-tt']
+            cmd += ['--kitten', f'cwd={cwd}'] if cwd else []
+            cmd += [ssh]
+        else:
+            cmd += ['--cwd', cwd] if cwd else []
+        cmd += run.split() if run else []
+        subprocess.run(cmd, capture_output=True, check=True)
+        self.opened_tags += [tag] if tag else []
+
+    def open_session(self, session):
+        config_file = CONFIG_PATH / f"{session}.yaml"
+        if not config_file.exists():
+            print(f"No such session '{session}'\n")
+            list_sessions()
+            sys.exit(1)
+
+        with open(config_file, 'r') as f:
+            data = yaml.safe_load(f)
+
+        for tab in data['tabs']:
+            self.open_tab(tab)
+
+    def open_sessions(self, sessions):
+        for session in sessions:
+            self.open_session(session)
+
+def main():
+    parser = argparse.ArgumentParser(description="Kitty session manager")
+    parser.add_argument("session", nargs='*', help="Session name")
+    parser.add_argument("-l", "--list", action='store_true', help="List available sessions")
+    args = parser.parse_args()
+
+    if args.list or len(args.session) == 0:
+        list_sessions()
+    else:
+        SessionManager().open_sessions(args.session)
+
+if __name__ == "__main__":
+    main()
