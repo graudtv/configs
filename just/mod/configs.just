@@ -10,8 +10,3 @@ configure-vim: (_pm_install "vim")
 [group('configuration')]
 configure-nvim: install-nvim
     "{{justfile_directory()}}/configure" nvim --symlink
-
-# Install and configure kitty
-[group('configuration')]
-configure-kitty: install-kitty
-    "{{justfile_directory()}}/configure" kitty --symlink
