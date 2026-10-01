@@ -1,0 +1,5 @@
+image=/home/arch/Pictures/Wallpapers/main.jpg
+ignore-empty-password
+indicator
+clock
+indicator-radius=120

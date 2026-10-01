@@ -1,0 +1,10 @@
+layout {
+    gaps 1
+    shadow {
+        off
+    }
+}
+
+window-rule {
+    geometry-corner-radius 0
+}

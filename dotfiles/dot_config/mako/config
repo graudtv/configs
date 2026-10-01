@@ -1,0 +1,13 @@
+border-radius=5
+border-size=1
+border-color=#63d478e0
+background-color=#343738e0
+text-color=#ffffff
+
+font=monospace 12px
+width=320
+padding=6
+margin=10
+
+on-button-middle=dismiss-all
+#group-by=app-name
