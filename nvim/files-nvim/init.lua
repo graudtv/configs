@@ -29,6 +29,15 @@ vim.keymap.set('n', '<leader>C', '<leader>u', { remap=true })
 -- Copy visual selection to clipboard
 vim.keymap.set('v', 'Y', '"+y')
 
+function on_buf_save(cmd)
+  vim.api.nvim_create_autocmd('BufWritePost', {
+    buffer = 0,
+    callback = function()
+      vim.fn.system(cmd)
+    end
+  })
+end
+
 -- Keybinding for the Run command
 vim.keymap.set({'n', 'v'}, '<leader>r', ':Run<CR>', {
   desc = 'Run the current file or visual selection as vim/lua script' })
@@ -39,19 +48,8 @@ vim.keymap.set('n', '<leader>e', function()
   vim.api.nvim_feedkeys(":e " .. dirname, 'n', true)
 end, { desc = 'Like :e, but start at the directory of the current file' })
 
-local augroup = vim.api.nvim_create_augroup("nvimrc", { clear = true })
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "kitty",
-  group = augroup,
-  callback = function()
-    vim.api.nvim_create_autocmd("BufWritePost", {
-      buffer = 0,
-      callback = function()
-        vim.fn.system("kitten @ load-config")
-      end,
-    })
-  end,
+require("nvim-filesave-hooks").add_hooks({
+  ["~/.config/mako/config"] = "~/scripts/mako-show-samples"
 })
 
 

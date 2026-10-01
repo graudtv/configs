@@ -14,6 +14,7 @@ find_neovim() {
 parse_default_options nvim "$@"
 install_file "files-nvim/init.lua" "${CONFDIR}/init.lua"
 install_file "files-nvim/lua/custom-commands.lua" "${CONFDIR}/lua/custom-commands.lua"
+install_file "files-nvim/lua/nvim-filesave-hooks.lua" "${CONFDIR}/lua/nvim-filesave-hooks.lua"
 install_file "files-nvim/lua/nvutils.lua" "${CONFDIR}/lua/nvutils.lua"
 install_file "files-nvim/lua/reload-hooks.lua" "${CONFDIR}/lua/reload-hooks.lua"
 install_file "files-nvim/nvim-pack-lock.json" "${CONFDIR}/nvim-pack-lock.json"
