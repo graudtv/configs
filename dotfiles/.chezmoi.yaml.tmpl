@@ -1,0 +1,10 @@
+{{- $presetChoices := list "none" "work-pc-arch" -}}
+{{- $preset := promptChoiceOnce . "preset" "Configuration preset" $presetChoices -}}
+
+sourceDir: {{.chezmoi.workingTree }}
+mode: symlink
+
+data:
+  preset: {{ $preset }}
+
+# vim: ft=yaml

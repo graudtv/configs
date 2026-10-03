@@ -1,0 +1,23 @@
+{{- $spec := (includeTemplate "packages.yaml.tmpl" . | fromYaml) -}}
+{{- $installedPackages := dict }}
+{{- range output "bash" "-c" "pacman -Q | awk '{print $1}'" | splitList "\n" -}}
+  {{- $_ := set $installedPackages . 1 -}}
+{{- end -}}
+
+{{- $packages := list -}}
+{{- range dig "pacman" list $spec -}}
+  {{- if not (hasKey $installedPackages .) -}}
+    {{- $packages = append $packages . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $packages -}}
+  {{- $packageList := $packages | quoteList | join " " -}}
+#!/bin/bash
+echo "Installing packages with pacman: {{ $packageList }}"
+sudo pacman -S {{ $packageList }}
+{{- end -}}
+
+{{- /*
+# vim: ft=bash
+*/ -}}
