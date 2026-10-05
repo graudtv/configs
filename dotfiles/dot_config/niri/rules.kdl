@@ -17,6 +17,15 @@ window-rule {
     open-floating true
 }
 
+// Image preview with nautilus + suchi
+window-rule {
+    match app-id=r#"^org\.gnome\.NautilusPreviewer$"#
+    open-floating true
+    min-width 1506 // screen-width / scale - 2 * x_gap
+    min-height 815 // screen-height / scale - 2 * y_gap - top_bar_height
+    default-floating-position x=15 y=15 relative-to="top-left"
+}
+
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {
@@ -60,6 +69,7 @@ window-rule {
 
 window-rule {
     match app-id="Throne"
+    match app-id="Mattermost.Desktop"
     open-maximized true
     open-on-workspace "utils"
 }
