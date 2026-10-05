@@ -5,17 +5,37 @@
 {{- end -}}
 
 {{- $packages := list -}}
+{{- $yayPackages := list -}}
 {{- range dig "pacman" list $spec -}}
-  {{- if not (hasKey $installedPackages .) -}}
-    {{- $packages = append $packages . -}}
+  {{- $packagesToHandle := . -}}
+  {{- if eq (kindOf .) "string" -}}
+    {{- $packagesToHandle = list . -}}
+  {{- end -}}
+  {{- range $packagesToHandle -}}
+    {{- if hasPrefix "yay:" . -}}
+      {{- if not (trimPrefix "yay:" . | hasKey $installedPackages) -}}
+        {{- $yayPackages = trimPrefix "yay:" . | append $yayPackages -}}
+      {{- end -}}
+    {{- else -}}
+      {{- if not (hasKey $installedPackages .) -}}
+        {{- $packages = append $packages . -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{- if $packages -}}
+{{- if or $packages $yayPackages -}}
   {{- $packageList := $packages | quoteList | join " " -}}
+  {{- $yayPackageList := $yayPackages | quoteList | join " " -}}
 #!/bin/bash
+  {{- if $packages }}
 echo "Installing packages with pacman: {{ $packageList }}"
 sudo pacman -S {{ $packageList }}
+  {{- end -}}
+  {{- if $yayPackages }}
+echo "Installing packages with yay: {{ $yayPackageList }}"
+yay -S {{ $yayPackageList }}
+  {{- end -}}
 {{- end -}}
 
 {{- /*
