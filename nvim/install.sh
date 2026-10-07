@@ -10,14 +10,8 @@ find_neovim() {
   exit 1
 }
 
-
 parse_default_options nvim "$@"
-install_file "files-nvim/init.lua" "${CONFDIR}/init.lua"
-install_file "files-nvim/lua/custom-commands.lua" "${CONFDIR}/lua/custom-commands.lua"
-install_file "files-nvim/lua/nvim-filesave-hooks.lua" "${CONFDIR}/lua/nvim-filesave-hooks.lua"
-install_file "files-nvim/lua/nvutils.lua" "${CONFDIR}/lua/nvutils.lua"
-install_file "files-nvim/lua/reload-hooks.lua" "${CONFDIR}/lua/reload-hooks.lua"
-install_file "files-nvim/nvim-pack-lock.json" "${CONFDIR}/nvim-pack-lock.json"
+install_files_recursive "../dotfiles/dot_config/nvim" "$CONFDIR"
 install_bash_config_snippet "../dotfiles/dot_config/bash/editor-is-nvim.sh"
 "$(find_neovim)" -c "qall"
 

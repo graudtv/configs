@@ -47,6 +47,15 @@ install_file() {
     fi
 }
 
+install_files_recursive() {
+    local src="$1"
+    local dst="$2"
+    local file
+    for file in $(find "$src" -type f -printf "%P\n"); do
+      install_file "$src/$file" "${CONFDIR}/$file"
+    done
+}
+
 print_default_usage() {
     local target=$1
     echo "This script automatically installs some keybindings and plugins for $target"
