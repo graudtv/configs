@@ -18,7 +18,7 @@ install_file "files-nvim/lua/nvim-filesave-hooks.lua" "${CONFDIR}/lua/nvim-files
 install_file "files-nvim/lua/nvutils.lua" "${CONFDIR}/lua/nvutils.lua"
 install_file "files-nvim/lua/reload-hooks.lua" "${CONFDIR}/lua/reload-hooks.lua"
 install_file "files-nvim/nvim-pack-lock.json" "${CONFDIR}/nvim-pack-lock.json"
-install_bash_config_snippet "files-bash/editor-is-nvim.sh"
+install_bash_config_snippet "../dotfiles/dot_config/bash/editor-is-nvim.sh"
 "$(find_neovim)" -c "qall"
 
 echo "Configuration installed. Now you can run nvim"
