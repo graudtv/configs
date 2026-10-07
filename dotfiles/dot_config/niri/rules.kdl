@@ -70,6 +70,7 @@ window-rule {
 window-rule {
     match app-id="Throne"
     match app-id="Mattermost.Desktop"
+    match app-id="mattermost-desktop"
     open-maximized true
     open-on-workspace "utils"
 }

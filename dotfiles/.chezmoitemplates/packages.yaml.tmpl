@@ -22,6 +22,7 @@
     - yay:ack
     - bash-completion
     - curl
+    - rsync
     - git-lfs
     - ncdu
     - nmon
@@ -37,6 +38,8 @@
     - openssh
     - man-db
     - man-pages
+  cliExtra: &groups.cli-extra
+    - pass
   guiShell: &groups.gui-shell
     - niri
     - noctalia
@@ -70,6 +73,12 @@
     - firefox
     - seahorse
     - gnome-keyring
+  guiToolsExtra: &groups.gui-tools-extra
+    - vlc
+    - libreoffice-still
+    - hunspell
+    - hunspell-en_us
+    - hunspell-ru
   openconnect: &groups.openconnect
     - network-manager-applet
     - networkmanager-openconnect
@@ -82,8 +91,10 @@ pacman:
   - *groups.system
   - *groups.dev
   - *groups.cli
+  - *groups.cli-extra
   - *groups.gui-shell
   - *groups.gui-tools
+  - *groups.gui-tools-extra
   - *groups.openconnect
 {{- end }}
 
