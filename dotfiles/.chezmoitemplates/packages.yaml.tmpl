@@ -1,7 +1,7 @@
 .groups:
   essential: &groups.essential
-    - lsb-release
     - git
+    - lsb-release
     - vim
     - wget
   drivers: &groups.drivers
@@ -14,71 +14,71 @@
     - clang
     - cmake
     - ninja
+    - nvm
     - python-pip
     - python-yaml
-    - nvm
   cli: &groups.cli
-    - neovim
-    - yay:ack
     - bash-completion
     - curl
-    - rsync
-    - git-lfs
-    - ncdu
-    - nmon
-    - fzf
-    - tldr
-    - tmux
     - fastfetch
-    - zoxide
-    - unzip
-    - tree
-    - texinfo
-    - traceroute
-    - openssh
+    - fzf
+    - git-lfs
     - man-db
     - man-pages
+    - ncdu
+    - neovim
+    - nmon
+    - openssh
+    - rsync
+    - texinfo
+    - tldr
+    - tmux
+    - traceroute
+    - tree
+    - unzip
+    - yay:ack
+    - zoxide
   cliExtra: &groups.cli-extra
     - pass
   guiShell: &groups.gui-shell
+    - brightnessctl
+    - fuzzel
+    - greetd
+    - libnotify
+    - mako
     - niri
     - noctalia
-    - greetd
-    - swayidle
-    - mako
     - noto-fonts
     - noto-fonts-emoji
-    - ttf-noto-nerd
-    - brightnessctl
-    - playerctl
     - pipewire
+    - playerctl
     - polkit-gnome
     - qt6-multimedia-ffmpeg
     - qt6-wayland
-    - fuzzel
-    - libnotify
+    - swayidle
+    - ttf-noto-nerd
     - xdg-desktop-portal-gtk
-    - yay:wlogout
-    - yay:swaylock-effects
     - yay:noctalia-greeter
+    - yay:swaylock-effects
+    - yay:wlogout
   guiTools: &groups.gui-tools
     - alacritty
-    - kitty
     - dolphin
-    - nautilus
-    - sushi
+    - firefox
+    - gnome-keyring
     - gparted
     - imv
-    - wev
-    - firefox
+    - kitty
+    - nautilus
     - seahorse
-    - gnome-keyring
+    - sushi
+    - wev
   guiToolsExtra: &groups.gui-tools-extra
-    - vlc
-    - libreoffice-still
     - hunspell
     - hunspell-en_us
     - hunspell-ru
+    - libreoffice-still
+    - vlc
   openconnect: &groups.openconnect
     - network-manager-applet
     - networkmanager-openconnect
