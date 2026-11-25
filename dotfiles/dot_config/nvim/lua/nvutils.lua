@@ -42,3 +42,15 @@ function mksetup(plugin, config)
     require(plugin).setup(config or {})
   end
 end
+
+-- Register a shell command to be run when the current buffer is saved.
+-- Useful for experimenting with misc config files
+function on_buf_save(cmd)
+  vim.api.nvim_create_autocmd('BufWritePost', {
+    buffer = 0,
+    callback = function()
+      vim.fn.system(cmd)
+    end
+  })
+end
+

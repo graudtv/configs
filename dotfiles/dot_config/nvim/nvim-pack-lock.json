@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "Coqtail": {
+      "rev": "93deeb6dd0ef30c67574f68a657786e90e806f76",
+      "src": "https://github.com/whonore/Coqtail"
+    },
     "bufexplorer": {
       "rev": "b96d275811b92e86ee52be3112e1de735ba08fb9",
       "src": "https://github.com/jlanzarotta/bufexplorer"

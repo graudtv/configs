@@ -19,24 +19,13 @@ commands.bind("DiagnosticToggle", commands.diagnostic_toggle):keymap('n', '<lead
 on_reload = commands.on_reload
 on_reload(reload_package, 'nvutils')
 on_reload(reload_package, 'custom-commands')
+on_reload(reload_package, 'format-buffer')
 
 -- Preprocessor-style comments
 commands.keymap('v', 'c', commands.pp_comment_v_toggle)
 commands.keymap('n', '<leader>c', commands.pp_comment_n_toggle)
 commands.keymap('n', '<leader>u', commands.pp_comment_n_delete)
 vim.keymap.set('n', '<leader>C', '<leader>u', { remap=true })
-
--- Copy visual selection to clipboard
-vim.keymap.set('v', 'Y', '"+y')
-
-function on_buf_save(cmd)
-  vim.api.nvim_create_autocmd('BufWritePost', {
-    buffer = 0,
-    callback = function()
-      vim.fn.system(cmd)
-    end
-  })
-end
 
 -- Keybinding for the Run command
 vim.keymap.set({'n', 'v'}, '<leader>r', ':Run<CR>', {
@@ -156,6 +145,8 @@ config = skip_disabled {
     ['NoahTheDuke/vim-just'] = { enabled = true },
     -- Syntax highlighting for GNU asm
     ['HealsCodes/vim-gas'] = { enabled = true },
+    -- Rocq files
+    ['whonore/Coqtail'] = { enabled = true },
   },
   colorscheme = 'onedark',
 }
@@ -222,6 +213,21 @@ setup_plugins(config.ftplugins)
 
 vim.cmd.colorscheme(config.colorscheme)
 
+-- Configure formatters
+require('format-buffer').setup({
+  keymap = '<leader>f',
+  command = "Format",
+  formatters = {
+    c = 'clang-format',
+    cpp = 'clang-format',
+    javascript = 'npx --prefer-offline prettier --parser=typescript',
+    javascriptreact = 'npx --prefer-offline prettier --parser=typescript',
+    typescript = 'npx --prefer-offline prettier --parser=typescript',
+    typescriptcommon = 'npx --prefer-offline prettier --parser=typescript',
+    typescriptreact = 'npx --prefer-offline prettier --parser=typescript',
+    rust = 'rustfmt',
+  }
+})
 
 --[[
 add_package('graudtv/picktheme.nvim')
@@ -269,9 +275,9 @@ vim.keymap.set('n', '<leader>g', ':Git ')
 
 add_package('nvim-lua/plenary.nvim')
 add_package('nvim-telescope/telescope.nvim')
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+-- local builtin = require('telescope.builtin')
+-- vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+-- vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
 
 -- LSP
 vim.diagnostic.config({
@@ -310,5 +316,10 @@ vim.keymap.set('i', '<C-l>', '<C-^>')
 vim.keymap.set('n', '<C-l>', 'a<C-^><Esc>')
 -- Clear highlights when pressing ESC in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+-- Copy visual selection to clipboard
+vim.keymap.set('v', 'Y', '"+y')
+-- Enter lua command
+vim.keymap.set('n', '=', ':= ')
+
 
 -- vim: filetype=lua
