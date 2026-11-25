@@ -1,6 +1,11 @@
-{{- $spec := (includeTemplate "packages.yaml.tmpl" . | fromYaml) -}}
+{{- $localData := includeTemplate "localdata" . | fromYaml -}}
+{{- $spec := includeTemplate "packages.yaml.tmpl" . | fromYaml -}}
 {{- $installedPackages := dict }}
 {{- range output "bash" "-c" "pacman -Q | awk '{print $1}'" | splitList "\n" -}}
+  {{- $_ := set $installedPackages . 1 -}}
+{{- end -}}
+{{- range get $localData "ignoredPackages" | default list -}}
+  {{- /* assume ignoredPackages to be installed */ -}}
   {{- $_ := set $installedPackages . 1 -}}
 {{- end -}}
 

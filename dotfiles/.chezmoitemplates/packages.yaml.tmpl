@@ -8,25 +8,35 @@
     - sof-firmware
   system: &groups.system
     - networkmanager
+    - pacman-contrib
     - usbutils
   dev: &groups.dev
     - base-devel
     - clang
+    - cloc
     - cmake
+    - jq
+    - just
     - ninja
     - nvm
     - python-pip
     - python-yaml
+    - uv
+    - yq
   cli: &groups.cli
     - bash-completion
+    - bind
     - curl
+    - dos2unix
     - fastfetch
     - fzf
     - git-lfs
+    - glow
     - man-db
     - man-pages
     - ncdu
     - neovim
+    - nmap
     - nmon
     - openssh
     - rsync
@@ -57,6 +67,7 @@
     - qt6-wayland
     - swayidle
     - ttf-noto-nerd
+    - wl-clipboard
     - xdg-desktop-portal-gtk
     - yay:noctalia-greeter
     - yay:swaylock-effects
@@ -64,6 +75,7 @@
   guiTools: &groups.gui-tools
     - alacritty
     - dolphin
+    - evince # gnome document viewer
     - firefox
     - gnome-keyring
     - gparted
@@ -71,7 +83,7 @@
     - kitty
     - nautilus
     - seahorse
-    - sushi
+    - sushi # file previewer for nautilus
     - wev
   guiToolsExtra: &groups.gui-tools-extra
     - hunspell

@@ -1,0 +1,5 @@
+{{- if stat (joinPath (.chezmoi.configFile | dir) "local.yaml") -}}
+{{-   joinPath (.chezmoi.configFile | dir) "local.yaml" | include -}}
+{{- else -}}
+{}
+{{- end -}}
